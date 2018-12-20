@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # apache-top
-# Copyright (C) 2006  Carles Amigó
+# Copyright (C) 2006-2012  Carles Amigó
 # Copyright (C) 2018  Karl Johnson
 #
 # This program is free software; you can redistribute it and/or
