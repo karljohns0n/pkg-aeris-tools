@@ -3,6 +3,7 @@
 #
 # apache-top
 # Copyright (C) 2006  Carles Amigó
+# Copyright (C) 2018  Karl Johnson
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -187,7 +188,7 @@ def print_screen(screen, url, show_scoreboard):
                 screen.addstr(y+5+num/width,0,message, curses.A_BOLD | curses.A_REVERSE)
                 message = ""
 
-            print_proceses(y+6+num/width,0,screen, data.proceses_data, columns=[ 1, 3, 5, 4, 11, 10, 12 ], sort=sort, reverse=reverse, width=width, show_only_active=show_only_active )
+            print_proceses(y+6+num/width,0,screen, data.proceses_data, columns=[ 1, 3, 5, 4, 13, 11, 14 ], sort=sort, reverse=reverse, width=width, show_only_active=show_only_active )
 
             #screen.hline(2, 1, curses.ACS_HLINE, 77)
             screen.refresh()
@@ -199,38 +200,29 @@ def print_screen(screen, url, show_scoreboard):
                 pass
 
             if c == "q":
-                # sortir
                 end = True
             elif c == "P":
-                # ordenar per PID
                 sort = 1
                 message = "Sort by PID"
             elif c == "C":
-                # ordenar per cpu
                 sort = 4
                 message = "Sort by CPU usage"
             elif c == "S":
-                # ordenar per SS"
                 sort = 5
                 message = "Sort by Seconds since beginning of most recent request"
             elif c == "V":
-                # ordenar per vhost
-                sort = 11
+                sort = 13
                 message = "Sort by VirtualHost"
             elif c == "M":
-                # ordenar per Mode of operation
                 sort = 3
                 message = "Sort by Mode of operation"
             elif c == "R":
-                # ordenar per request
-                sort = 12
+                sort = 14
                 message = "Sort by Request"
             elif c == "I":
-                # ordenar per ip
-                sort = 10
+                sort = 11
                 message = "Sort by IP"
             elif c == "s":
-                # mostrar scoreboard"
                 if show_scoreboard == 0:
                     show_scoreboard = 1
                     message = "Showing mod_status scoreboard"
@@ -239,7 +231,6 @@ def print_screen(screen, url, show_scoreboard):
 					message = "Hiding mod_status scoreboard"
 					y = 0
             elif c == "a":
-                # mostra els actius
                 if show_only_active:
                     show_only_active = False
                     message = "Show all processes"
@@ -247,7 +238,6 @@ def print_screen(screen, url, show_scoreboard):
                     show_only_active = True
                     message = "Show only active processes"
             elif c == "r":
-                # cambiar l'ordre
                 if reverse:
                     reverse = False
                     message = "Reversed sorting"
@@ -262,7 +252,7 @@ def print_screen(screen, url, show_scoreboard):
             pass
 
 def print_proceses(y,x,screen, proceses, columns, sort, reverse, width, show_only_active = True):
-    header = "PID   M SS     CPU  VHost           IP              Request"
+    header = "PID   M SS     CPU  VHost                       IP              Request"
     screen.addstr(y,x,header + " "*(width-len(header)), curses.A_REVERSE)
 
     n = 1
@@ -298,7 +288,7 @@ def print_process(y,x,screen,process,columns,show_only_active,width):
             n = n+ 6
             screen.addstr(y,n, str(process[columns[4]])) # VHOST
 
-            n = n+ 16
+            n = n+ 28
             screen.addstr(y,n, str(process[columns[5]])) # IP
 
             n = n+ 15
@@ -342,12 +332,13 @@ url. It needs the ExtendedStatus flag
         "cpu":    4,
         "ss":    5,
         "req":    6,
-        "conn":    7,
-        "child":    8,
-        "slot":    9,
-        "client":    10,
-        "vhost":    11,
-        "request":    12
+        "dur":    7,
+        "conn":    8,
+        "child":    9,
+        "slot":    10,
+        "client":    11,
+        "vhost":    13,
+        "request":    14
     }
 
     try:
