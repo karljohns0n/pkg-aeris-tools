@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.1
+Version:		1.2
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -44,6 +44,10 @@ fi
 %dir /opt/aeris/tools
 
 %changelog
+* Mon Feb 18 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.2-1
+- Fix apache-top view for recent cPanel/Apache
+- Bump mysqltuner 1.7.14
+
 * Wed Nov 7 2018 Karl Johnson <karljohnson.it@gmail.com> - 1.1-1
 - Add optional number of rentention days in backup-mysql.sh 1.2
 - Bump mysqltuner 1.7.13
