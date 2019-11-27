@@ -1,12 +1,12 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.3
+Version:		1.4
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
 Group:			Utilities/Console
-License:		GPLv3+
+License:		MIT
 URL:			https://repo.aerisnetwork.com
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -14,6 +14,7 @@ Source0:		mysqltuner.pl
 Source1:		apache-top.py
 Source2:		backup-mysql.sh
 Source3:		cpwpcheck.sh
+Source4:		archivecheck.sh
 
 Requires: mutt
 
@@ -28,7 +29,7 @@ This package includes a set of tools and scripts for Web hosting servers from di
 install -d -m 0700 %{buildroot}/opt/aeris
 install -d -m 0700 %{buildroot}/opt/aeris/tools
 
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{buildroot}/opt/aeris/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{buildroot}/opt/aeris/tools
 
 %clean
 if [ -d %{buildroot} ] ; then
@@ -44,6 +45,10 @@ fi
 %dir /opt/aeris/tools
 
 %changelog
+* Wed Nov 27 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.4-1
+- Add new script to verify tar archive integrity
+- Switch license to MIT
+
 * Wed Nov 13 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.3-1
 - Bump mysqltuner 1.7.19
 - Add ionice to backup-mysql script
