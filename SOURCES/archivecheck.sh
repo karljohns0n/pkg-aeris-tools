@@ -11,12 +11,12 @@
 while getopts :p: option; do
 		case "${option}" in
 		p)
-				FPATH=${OPTARG}
-				;;
+			FPATH=${OPTARG}
+			;;
 		\?)
-				echo "Script usage: testarchive.sh -p [path OR file]" >&2
-				exit 1
-				;;
+			echo "Script usage: testarchive.sh -p [path OR file]" >&2
+			exit 1
+			;;
 		:)
 			echo "Invalid option: $OPTARG requires an argument" 1>&2
 			exit 1
