@@ -63,7 +63,7 @@ find $BACKUP -maxdepth 1 -type f -name "*.gz" -daystart -mtime +"$RDAY" -exec rm
 DBS="$($MYSQL --defaults-extra-file=/root/.my.cnf -u $MUSER -h $MHOST -Bse 'show databases')"
 for db in $DBS; do
 	FILE=$BACKUP/mysql-$db.$NOW.$(date +"%H-%M-%S").gz
-	ionice -c2 -n7 $MYSQLDUMP --defaults-extra-file=/root/.my.cnf -u $MUSER -h $MHOST --single-transaction $db | $GZIP -9 > $FILE
+	$MYSQLDUMP --defaults-extra-file=/root/.my.cnf -u $MUSER -h $MHOST --single-transaction $db | $GZIP -9 > $FILE
 done
 
 ### Optimize databases at the same time ###
