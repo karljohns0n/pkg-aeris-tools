@@ -6,7 +6,7 @@
 #
 # by Karl Johnson -- karljohnson.it@gmail.com -- kj @ Freenode
 #
-# Version 1.2
+# Version 1.3
 #
 
 ### System Setup ###

@@ -2,7 +2,7 @@
 
 Name:			aeris-tools
 Version:		1.4
-Release:		1%{?dist}
+Release:		2%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
 Group:			Utilities/Console
@@ -16,7 +16,8 @@ Source2:		backup-mysql.sh
 Source3:		cpwpcheck.sh
 Source4:		archivecheck.sh
 
-Requires: mutt
+Requires:		mutt
+Requires:		perl-Getopt-Long
 
 %description
 This package includes a set of tools and scripts for Web hosting servers from different vendor including Aeris Network.
@@ -45,6 +46,9 @@ fi
 %dir /opt/aeris/tools
 
 %changelog
+* Fri Jan 10 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.4-2
+- Add CentOS 8 support
+
 * Wed Nov 27 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.4-1
 - Add new script to verify tar archive integrity
 - Switch license to MIT
