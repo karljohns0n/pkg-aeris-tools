@@ -1,4 +1,6 @@
 ---
+language: shell
+
 env:
   - distribution: centos
     version: 6
