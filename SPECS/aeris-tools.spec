@@ -17,7 +17,9 @@ Source3:		cpwpcheck.sh
 Source4:		archivecheck.sh
 
 Requires:		mutt
+%if 0%{?rhel} >= 7
 Requires:		perl-Getopt-Long
+%endif
 
 %description
 This package includes a set of tools and scripts for Web hosting servers from different vendor including Aeris Network.
