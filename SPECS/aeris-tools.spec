@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.4
+Version:		1.5
 Release:		2%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -15,6 +15,10 @@ Source1:		apache-top.py
 Source2:		backup-mysql.sh
 Source3:		cpwpcheck.sh
 Source4:		archivecheck.sh
+
+Source100:		aeris.sh
+
+BuildRequires:	setup
 
 Requires:		mutt
 %if 0%{?rhel} >= 7
@@ -31,8 +35,10 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 install -d -m 0700 %{buildroot}/opt/aeris
 install -d -m 0700 %{buildroot}/opt/aeris/tools
-
 install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{buildroot}/opt/aeris/tools
+
+install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
+install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 
 %clean
 if [ -d %{buildroot} ] ; then
@@ -46,8 +52,13 @@ fi
 %attr(0700,root,root) /opt/aeris/tools/*
 %dir /opt/aeris
 %dir /opt/aeris/tools
+%{_sysconfdir}/profile.d/z-aeris.sh
+
 
 %changelog
+* Wed Apr 22 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.5-2
+- Add custom bash profile with aliases and functions
+
 * Fri Jan 10 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.4-2
 - Add CentOS 8 support
 
