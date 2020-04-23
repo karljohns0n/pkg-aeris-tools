@@ -28,7 +28,7 @@ alias stopxen="/usr/lib64/xen/bin/xendomains stop"
 ## Create MySQL DB with user and password
  
 mysqladd() {
-	if [ $# -ne 2 ]; then
+	if [[ $# -ne 2 ]]; then
 		echo 1>&2 "Usage: mysqladd database user"
 	else
 		MYPASS=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
@@ -45,5 +45,27 @@ mysqladd() {
 
 
 # Let's Encrypt
+
+## SSL generation with standalone, nginx plugin or wildcard using DNS
+
 alias ssl-standalone="certbot certonly --agree-tos --register-unsafely-without-email --rsa-key-size 4096 --authenticator standalone --installer nginx --allow-subset-of-names --pre-hook \"systemctl stop monit nginx\" --post-hook \"systemctl start nginx monit\""
 alias ssl-nginx="certbot certonly --agree-tos --register-unsafely-without-email --rsa-key-size 4096 --installer nginx --allow-subset-of-names"
+
+ssl-wildcard() {
+	if [[ $# -lt 1 ]]; then
+		echo 1>&2 "Usage: ssl-wildcard -d *.example.com -d example.com"
+	else
+		if [[ ! -d /etc/letsencrypt || ! -f /usr/bin/certbot ]]; then
+			echo "Cerbot isn't installed, installing.."
+			yum -q -y install certbot-nginx
+		fi
+
+		if [[ ! -f /etc/letsencrypt/acme-dns-auth.py ]]; then
+			echo "ACME DNS authentication hook script isn't available, downloading.."
+			curl -s -o /etc/letsencrypt/acme-dns-auth.py https://raw.githubusercontent.com/joohoi/acme-dns-certbot-joohoi/master/acme-dns-auth.py
+			chmod 0700 /etc/letsencrypt/acme-dns-auth.py
+		fi
+
+		certbot certonly --agree-tos --register-unsafely-without-email --rsa-key-size 4096 --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges "$@"
+	fi
+}
