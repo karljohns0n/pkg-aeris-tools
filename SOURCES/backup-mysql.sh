@@ -68,4 +68,4 @@ done
 
 ### Optimize databases at the same time ###
 
-/usr/bin/mysqlcheck --defaults-extra-file=/root/.my.cnf -u root --auto-repair --optimize --all-databases
+/usr/bin/mysqlcheck --defaults-extra-file=/root/.my.cnf -u root --auto-repair --all-databases
