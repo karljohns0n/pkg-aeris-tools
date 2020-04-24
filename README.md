@@ -25,15 +25,16 @@ This package provides a set of tools and scripts for Web hosting servers from di
 
 ## Easy installation for CentOS
 
-There's a package available for CentOS 6, 7 and 8. The easiest way to install it is to use Aeris Network yum repository.
+There's packages available for CentOS 6, 7 and 8. The easiest way to install it is using Aeris Network yum repository:
 
 ```bash
-CentOS 6 > yum -y install https://repo.aerisnetwork.com/pub/aeris-release-6.rpm
-CentOS 7 > yum -y install https://repo.aerisnetwork.com/pub/aeris-release-7.rpm
-CentOS 8 > dnf -y install https://repo.aerisnetwork.com/pub/aeris-release-8.rpm
+CentOS 6 > yum install -y https://repo.aerisnetwork.com/pub/aeris-release-6.rpm
+CentOS 7 > yum install -y https://repo.aerisnetwork.com/pub/aeris-release-7.rpm
+CentOS 8 > dnf install -y https://repo.aerisnetwork.com/pub/aeris-release-8.rpm
 ```
-Once the repository is configured, you can proceed installing aeris-tools.
+
+Once the repository is configured, you can proceed with installing nginx-more:
 
 ```bash
-#> yum install aeris-tools
+> yum install aeris-tools
 ```
