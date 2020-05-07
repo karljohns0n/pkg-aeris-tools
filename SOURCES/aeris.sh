@@ -8,6 +8,11 @@ alias eximlogs="tail -f /var/log/exim_mainlog"
 ## Git
 alias gs="git status -u"
 
+## Hypervisor
+alias megacli="/opt/megaraid/megacli"
+alias storcli="/opt/megaraid/storcli"
+alias stopxen="/usr/lib64/xen/bin/xendomains stop"
+
 ## LEMP
 alias nginxlogs="tail -f /var/log/nginx/error.log"
 alias purge-nginx-cache="rm -rf /var/lib/nginx/cache/fastcgi/*"
@@ -17,10 +22,8 @@ alias htop="htop -C"
 alias ll="ls -alh --color=auto"
 alias vi="vim"
 
-## Node
-alias megacli="/opt/megaraid/megacli"
-alias storcli="/opt/megaraid/storcli"
-alias stopxen="/usr/lib64/xen/bin/xendomains stop"
+## Other
+alias ttfb="curl -s -o /dev/null -w 'Connect: %{time_connect} ms\nTTFB: %{time_starttransfer} ms\nTotal time: %{time_total} ms \n'"
 
 
 # MySQL
