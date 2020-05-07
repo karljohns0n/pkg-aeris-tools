@@ -23,7 +23,7 @@ alias ll="ls -alh --color=auto"
 alias vi="vim"
 
 ## Other
-alias ttfb="curl -s -o /dev/null -w 'Connect: %{time_connect} ms\nTTFB: %{time_starttransfer} ms\nTotal time: %{time_total} ms \n'"
+alias ttfb="curl -s -o /dev/null -w 'Connect: %{time_connect}s\nTTFB: %{time_starttransfer}s\nTotal time: %{time_total}s \n'"
 
 
 # MySQL
