@@ -11,7 +11,7 @@ alias gs="git status -u"
 ## Hypervisor
 alias megacli="/opt/megaraid/megacli"
 alias storcli="/opt/megaraid/storcli"
-alias stopxen="/usr/lib64/xen/bin/xendomains stop"
+alias xenstop="/usr/lib64/xen/bin/xendomains stop"
 
 ## LEMP
 alias nginxlogs="tail -f /var/log/nginx/error.log"
