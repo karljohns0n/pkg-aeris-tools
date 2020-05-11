@@ -2,7 +2,7 @@
 
 [![ProjectStatus](https://img.shields.io/badge/status-active-brightgreen.svg)](#)
 [![Build](https://img.shields.io/travis/karljohns0n/pkg-aeris-tools/master.svg)](https://travis-ci.org/karljohns0n/pkg-aeris-tools)
-[![Release 1.5-2](https://img.shields.io/badge/release-1.5--2-success.svg)](#)
+[![Release 1.6-3](https://img.shields.io/badge/release-1.5--2-success.svg)](#)
 [![Change Log](https://img.shields.io/badge/change-log-blue.svg?style=flat)](https://repo.aerisnetwork.com/stable/centos/6/x86_64/repoview/aeris-tools.html)
 
 ## Synopsis
@@ -17,7 +17,8 @@ This package provides a set of tools and scripts for Web hosting servers from di
 * archivecheck.sh (1.1)
 * backup-mysql.sh (1.3)
 * cpwpcheck.sh (1.1)
-* mysqltuner (1.7.19)
+* mysqltuner (latest)
+* spectre-meltdown-checker (latest)
 
 ### Other
 

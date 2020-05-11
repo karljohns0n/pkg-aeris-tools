@@ -3,3 +3,4 @@ RPMS
 SOURCES/*.tar.gz
 SOURCES/*.tar.bz2
 SRPMS
+.DS_Store
