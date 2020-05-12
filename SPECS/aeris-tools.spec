@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.6
+Version:		1.7
 Release:		3%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -57,6 +57,9 @@ fi
 
 
 %changelog
+* Tue May 12 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.7-3
+- Add function to check website SSL validity
+
 * Mon May 11 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.6-3
 - Add spectre-meltdown-checker script
 - Fetch mysqltuner from GitHub

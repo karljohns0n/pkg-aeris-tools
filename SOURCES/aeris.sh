@@ -72,3 +72,11 @@ ssl-wildcard() {
 		certbot certonly --agree-tos --register-unsafely-without-email --rsa-key-size 4096 --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges "$@"
 	fi
 }
+
+ssl-check() {
+	if [[ $# -ne 1 ]]; then
+		echo 1>&2 "Usage: ssl-check example.com"
+	else
+		echo | openssl s_client -servername "$1" -connect "$1":443 2>/dev/null | openssl x509 -noout -subject -dates
+	fi
+}
