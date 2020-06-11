@@ -18,6 +18,7 @@ alias nginxlogs="tail -f /var/log/nginx/error.log"
 alias purge-nginx-cache="rm -rf /var/lib/nginx/cache/fastcgi/*"
 
 ## OS
+alias clear-history="cat /dev/null > ~/.bash_history ; history -c"
 alias htop="htop -C"
 alias ll="ls -alh --color=auto"
 alias vi="vim"
