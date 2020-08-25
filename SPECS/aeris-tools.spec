@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.7
+Version:		1.8
 Release:		3%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -16,6 +16,7 @@ Source2:		backup-mysql.sh
 Source3:		cpwpcheck.sh
 Source4:		archivecheck.sh
 Source5:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
+Source6:		backup-restic.sh
 
 Source100:		aeris.sh
 
@@ -36,7 +37,7 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 install -d -m 0700 %{buildroot}/opt/aeris
 install -d -m 0700 %{buildroot}/opt/aeris/tools
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{buildroot}/opt/aeris/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{buildroot}/opt/aeris/tools
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
@@ -57,6 +58,9 @@ fi
 
 
 %changelog
+* Tue Aug 25 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-3
+- Add restic wrapper script
+
 * Tue May 12 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.7-3
 - Add function to check website SSL validity
 
