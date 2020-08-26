@@ -59,8 +59,11 @@ fi
 
 $RESTIC snapshots >/dev/null 2>&1 || { echo "This restic repository doesn't seem to be initialized" && exit 1; }
 
-echo -e "Processing new snapshot..\n"
-$RESTIC backup -o s3.storage-class=STANDARD_IA "$RPATH" --exclude=".cache"
+echo -e "==> Checking for restic update\n"
+$RESTIC self-update
 
-echo -e "\n\nCleaning old backup..\n"
-$RESTIC forget --keep-last 5 --keep-monthly 1 --prune
+echo -e "\n\n==> Processing new snapshot\n"
+$RESTIC backup -o s3.storage-class=STANDARD_IA $RPATH --exclude=".cache"
+
+echo -e "\n\n==> Cleaning old snapshots\n"
+$RESTIC forget --keep-last 7 --keep-monthly 1 --prune
