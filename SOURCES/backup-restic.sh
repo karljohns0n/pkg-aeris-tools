@@ -4,7 +4,7 @@
 #
 # by Karl Johnson -- karljohnson.it@gmail.com -- kj @ Freenode
 #
-# Version 1.0
+# Version 1.1
 #
 
 RESTIC="$(which restic)"

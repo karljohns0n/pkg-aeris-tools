@@ -2,7 +2,7 @@
 
 Name:			aeris-tools
 Version:		1.8
-Release:		3%{?dist}
+Release:		4%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
 Group:			Utilities/Console
@@ -58,6 +58,9 @@ fi
 
 
 %changelog
+* Mon Aug 31 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-4
+- Change restic snapshots retention
+
 * Tue Aug 25 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-3
 - Add restic wrapper script
 
