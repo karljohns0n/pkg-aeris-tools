@@ -2,7 +2,7 @@
 
 Name:			aeris-tools
 Version:		1.8
-Release:		4%{?dist}
+Release:		5%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
 Group:			Utilities/Console
@@ -22,7 +22,7 @@ Source100:		aeris.sh
 
 BuildRequires:	setup
 
-Requires:		mutt
+Requires:		mutt mailx
 %if 0%{?rhel} >= 7
 Requires:		perl-Getopt-Long
 %endif
@@ -58,6 +58,9 @@ fi
 
 
 %changelog
+* Fri Sep 18 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-5
+- Require mailx
+
 * Mon Aug 31 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-4
 - Change restic snapshots retention
 

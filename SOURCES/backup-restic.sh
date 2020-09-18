@@ -59,7 +59,7 @@ fi
 
 $RESTIC snapshots >/dev/null 2>&1 || { echo "This restic repository doesn't seem to be initialized" && exit 1; }
 
-echo -e "=> Restic backup report for: $(hostname)"
+echo -e "=> Restic backup report for server: $(hostname)"
 
 echo -e "\n==> Checking for restic update\n"
 $RESTIC self-update
@@ -68,6 +68,7 @@ echo -e "\n\n==> Processing new snapshot\n"
 $RESTIC backup -o s3.storage-class=STANDARD_IA $RPATH --exclude=".cache"
 
 echo -e "\n\n==> Cleaning old snapshots\n"
-$RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 1 --prune
+$RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 3 --prune
 
-echo -e "\n\n==> Don't forget to run 'restic check' once in a while to ensure backup integrity"
+echo -e "\n\n==> Your data is now stored and encrypted with AES-256 on Amazon S3"
+echo -e "==> Don't forget to run 'restic check' once in a while to ensure backup integrity"
