@@ -1,3 +1,8 @@
+# Config
+
+HISTTIMEFORMAT="%d/%m/%y %T "
+HISTSIZE=10000
+
 # Alias
 
 ## cPanel
