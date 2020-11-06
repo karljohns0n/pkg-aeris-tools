@@ -1,6 +1,5 @@
 # Config
 
-HISTTIMEFORMAT="%d/%m/%y %T "
 HISTSIZE=10000
 
 # Alias
@@ -84,5 +83,36 @@ ssl-check() {
 		echo 1>&2 "Usage: ssl-check example.com"
 	else
 		echo | openssl s_client -servername "$1" -connect "$1":443 2>/dev/null | openssl x509 -noout -subject -dates
+	fi
+}
+
+# PHP-FPM
+
+## Add FPM pool for a new user
+
+phpfpmadd() {
+	if [[ $# -ne 1 ]]; then
+		echo 1>&2 "Usage: phpfpmadd user"
+	else
+		if [[ ! -f /etc/php-fpm.d/www.conf ]]; then
+			echo 1>&2 "Default www PHP pool is needed."
+		else
+			FPMPASS=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
+			FPMUSER=$1
+
+			adduser -b /home "$FPMUSER"
+			chmod 750 /home/"$FPMUSER"
+			chown "$FPMUSER":nginx /home/"$FPMUSER"
+			echo "$FPMPASS" | passwd "$FPMUSER" --stdin
+			cp /etc/php-fpm.d/www.conf /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "s/\[www\]/\[$FPMUSER\]/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "s/user\ \=\ www/user\ \=\ $FPMUSER/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "s/group\ \=\ www/group\ \=\ $FPMUSER/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "s/listen\ \=\ 127.0.0.1/\;listen\ \=\ 127.0.0.1/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "s/\;listen\ \= \/run\/php\-fpm\/www.sock/listen\ \=\ \/run\/php\-fpm\/$FPMUSER.sock/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "s/\;listen.owner\ \=\ root/listen.owner\ \=\ nginx/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "s/\;listen.group\ \=\ root/listen.group\ \=\ $FPMUSER/g" /etc/php-fpm.d/"$FPMUSER".conf
+			echo "New user and PHP pool $FPMUSER has been created with password $FPMPASS."
+		fi
 	fi
 }

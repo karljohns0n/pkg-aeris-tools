@@ -1,8 +1,8 @@
 # Aeris Tools
 
 [![ProjectStatus](https://img.shields.io/badge/status-active-brightgreen.svg)](#)
-[![Build](https://img.shields.io/travis/karljohns0n/pkg-aeris-tools/master.svg)](https://travis-ci.org/karljohns0n/pkg-aeris-tools)
-[![Release 1.8-4](https://img.shields.io/badge/release-1.8--4-success.svg)](#)
+[![Build](https://img.shields.io/travis/com/karljohns0n/pkg-aeris-tools/master.svg)](https://travis-ci.com/karljohns0n/pkg-aeris-tools)
+[![Release 1.8-5](https://img.shields.io/badge/release-1.8--5-success.svg)](#)
 [![Change Log](https://img.shields.io/badge/change-log-blue.svg?style=flat)](https://repo.aerisnetwork.com/stable/centos/6/x86_64/repoview/aeris-tools.html)
 
 ## Synopsis
