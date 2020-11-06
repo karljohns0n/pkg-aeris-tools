@@ -1,32 +1,52 @@
 #!/usr/bin/env bash
 #
-# Restic AWS S3 bash wrapper for cron setup
+# Restic bash wrapper for cron setup
+# Currently supporting AWS S3 and Backblaze B2 as destination
 #
 # by Karl Johnson -- karljohnson.it@gmail.com -- kj @ Freenode
 #
-# Version 1.1
+# Version 1.2
 #
 
 RESTIC="$(which restic)"
 
-while getopts :p: option; do
+usage () { 
+	echo "Restic bash wrapper. Currently supporting AWS S3 and Backblaze B2 as destination.";
+	echo "Script usage: restic.sh -d [aws|backblaze] -p \"[each path separated with space]\"";
+	exit 0;
+}
+
+while getopts :d:p:h option; do
 	case "${option}" in
+	d)
+		DESTBACK=${OPTARG}
+		[[ "$DESTBACK" == "aws" || "$DESTBACK" == "backblaze" ]] || usage
+		;;
 	p)
 		RPATH=${OPTARG}
 		;;
+	h)
+		usage; 
+		exit;;
 	\?)
-		echo "Script usage: restic.sh -p \"[paths OR files]\"" >&2
+		echo "Unknown option: -$OPTARG. Use -h for help." >&2
 		exit 1
 		;;
 	:)
-		echo "Invalid option: $OPTARG requires an argument" 1>&2
+		echo "Missing option argument for -$OPTARG. Use -h for help." 1>&2
 		exit 1
 		;;
 	esac
 done
+shift $((OPTIND-1))
 
 if [ -z "$RPATH" ]; then
-	echo "Script usage: restic.sh -p \"[paths OR files]\"" 1>&2
+	echo "Missing backup paths. Use -h for help." 1>&2
+	exit 1
+fi
+
+if [ -z "$DESTBACK" ]; then
+	echo "Missing backup destination. Use -h for help." 1>&2
 	exit 1
 fi
 
@@ -45,16 +65,26 @@ if [[ -z "$RESTIC_PASSWORD" ]]; then
 	echo "Variable RESTIC_PASSWORD must be configured" && exit 1
 fi
 
-if [[ -z "$AWS_ACCESS_KEY_ID" ]]; then
-	echo "Variable AWS_ACCESS_KEY_ID must be configured" && exit 1
-fi
+if [[ "$DESTBACK" == "aws" ]]; then
+	if [[ -z "$AWS_ACCESS_KEY_ID" ]]; then
+		echo "Variable AWS_ACCESS_KEY_ID must be configured" && exit 1
+	fi
 
-if [[ -z "$AWS_SECRET_ACCESS_KEY" ]]; then
-	echo "Variable AWS_SECRET_ACCESS_KEY must be configured" && exit 1
-fi
+	if [[ -z "$AWS_SECRET_ACCESS_KEY" ]]; then
+		echo "Variable AWS_SECRET_ACCESS_KEY must be configured" && exit 1
+	fi
 
-if [[ -z "$AWS_DEFAULT_REGION" ]]; then
-	echo "Variable AWS_DEFAULT_REGION must be configured" && exit 1
+	if [[ -z "$AWS_DEFAULT_REGION" ]]; then
+		echo "Variable AWS_DEFAULT_REGION must be configured" && exit 1
+	fi
+elif [[ "$DESTBACK" == "backblaze" ]]; then
+	if [[ -z "$B2_ACCOUNT_ID" ]]; then
+		echo "Variable B2_ACCOUNT_ID must be configured" && exit 1
+	fi
+
+	if [[ -z "$B2_ACCOUNT_KEY" ]]; then
+		echo "Variable B2_ACCOUNT_KEY must be configured" && exit 1
+	fi
 fi
 
 $RESTIC snapshots >/dev/null 2>&1 || { echo "This restic repository doesn't seem to be initialized" && exit 1; }
@@ -65,10 +95,14 @@ echo -e "\n==> Checking for restic update\n"
 $RESTIC self-update
 
 echo -e "\n\n==> Processing new snapshot\n"
-$RESTIC backup -o s3.storage-class=STANDARD_IA $RPATH --exclude=".cache"
+if [[ "$DESTBACK" == "aws" ]]; then
+	$RESTIC backup -o s3.storage-class=STANDARD_IA $RPATH --exclude=".cache"
+elif [[ "$DESTBACK" == "backblaze" ]]; then
+	$RESTIC backup -o b2.connections=10 $RPATH --exclude=".cache"
+fi
 
 echo -e "\n\n==> Cleaning old snapshots\n"
 $RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 3 --prune
 
-echo -e "\n\n==> Your data is now stored and encrypted with AES-256 on Amazon S3"
+echo -e "\n\n==> Your data is now stored and encrypted with AES-256 on $DESTBACK"
 echo -e "==> Don't forget to run 'restic check' once in a while to ensure backup integrity"
