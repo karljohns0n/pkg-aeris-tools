@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.8
+Version:		1.9
 Release:		5%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -58,6 +58,9 @@ fi
 
 
 %changelog
+* Sat Nov 7 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.9-5
+- Restic wrapper now supports Backblaze B2
+
 * Fri Sep 18 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-5
 - Require mailx
 

@@ -40,20 +40,21 @@ while getopts :d:p:h option; do
 done
 shift $((OPTIND-1))
 
-if [ -z "$RPATH" ]; then
-	echo "Missing backup paths. Use -h for help." 1>&2
+if [[ -z "$RPATH" ]]; then
+	echo "Missing backup path(s). Use -h for help." 1>&2
 	exit 1
 fi
 
-if [ -z "$DESTBACK" ]; then
+if [[ -z "$DESTBACK" ]]; then
 	echo "Missing backup destination. Use -h for help." 1>&2
 	exit 1
 fi
 
-if [ ! -f ~/.restic.cnf ]; then
+if [[ ! -f ~/.restic.cnf ]]; then
 	echo "Restic config not found!"
 	exit 1
 else
+	[[ $(stat -c %a ~/.restic.cnf) != 600 ]] && echo "Warning: restic configuration file should has 600 permission." 1>&2
 	. ~/.restic.cnf
 fi
 
@@ -98,11 +99,11 @@ echo -e "\n\n==> Processing new snapshot\n"
 if [[ "$DESTBACK" == "aws" ]]; then
 	$RESTIC backup -o s3.storage-class=STANDARD_IA $RPATH --exclude=".cache"
 elif [[ "$DESTBACK" == "backblaze" ]]; then
-	$RESTIC backup -o b2.connections=10 $RPATH --exclude=".cache"
+	$RESTIC backup -o b2.connections=8 $RPATH --exclude=".cache"
 fi
 
 echo -e "\n\n==> Cleaning old snapshots\n"
 $RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 3 --prune
 
-echo -e "\n\n==> Your data is now stored and encrypted with AES-256 on $DESTBACK"
+echo -e "\n\n==> Your data is now stored on $DESTBACK using AES-256 encryption"
 echo -e "==> Don't forget to run 'restic check' once in a while to ensure backup integrity"
