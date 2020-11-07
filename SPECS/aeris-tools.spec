@@ -60,6 +60,7 @@ fi
 %changelog
 * Sat Nov 7 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.9-5
 - Restic wrapper now supports Backblaze B2
+- Bump mysqltuner.pl to 1.7.20
 
 * Fri Sep 18 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-5
 - Require mailx
