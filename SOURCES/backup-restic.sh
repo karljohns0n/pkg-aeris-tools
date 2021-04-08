@@ -105,5 +105,5 @@ fi
 echo -e "\n\n==> Cleaning old snapshots\n"
 $RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 3 --prune
 
-echo -e "\n\n==> Your data is now stored on $DESTBACK using AES-256 encryption"
+echo -e "\n\n==> Your data is now stored on ${DESTBACK^^} using AES-256 encryption"
 echo -e "==> Don't forget to run 'restic check' once in a while to ensure backup integrity"

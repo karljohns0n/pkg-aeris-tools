@@ -6,7 +6,7 @@
 #
 # by Karl Johnson -- karljohnson.it@gmail.com -- kj @ Freenode
 #
-# Version 1.3
+# Version 1.4
 #
 
 ### System Setup ###
@@ -63,9 +63,9 @@ find $BACKUP -maxdepth 1 -type f -name "*.gz" -daystart -mtime +"$RDAY" -exec rm
 DBS="$($MYSQL --defaults-extra-file=/root/.my.cnf -u $MUSER -h $MHOST -Bse 'show databases')"
 for db in $DBS; do
 	FILE=$BACKUP/mysql-$db.$NOW.$(date +"%H-%M-%S").gz
-	$MYSQLDUMP --defaults-extra-file=/root/.my.cnf -u $MUSER -h $MHOST --single-transaction $db | $GZIP -9 > $FILE
+	$MYSQLDUMP --defaults-extra-file=/root/.my.cnf -u $MUSER -h $MHOST --force --single-transaction $db | $GZIP -9 > $FILE
 done
 
-### Optimize databases at the same time ###
+### Check databases at the same time ###
 
 /usr/bin/mysqlcheck --defaults-extra-file=/root/.my.cnf -u root --auto-repair --all-databases

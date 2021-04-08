@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.9
+Version:		1.10
 Release:		5%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -58,6 +58,11 @@ fi
 
 
 %changelog
+* Wed Apr 7 2021 Karl Johnson <karljohnson.it@gmail.com> - 1.10-5
+- Force mysqldump in case a view isn't valid
+- Bump mysqltuner.pl to 1.7.24
+- Bump spectre-meltdown-checker to latest
+
 * Sat Nov 7 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.9-5
 - Restic wrapper now supports Backblaze B2
 - Bump mysqltuner.pl to 1.7.20
