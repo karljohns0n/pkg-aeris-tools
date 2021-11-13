@@ -110,8 +110,8 @@ phpfpmadd() {
 			sed -i "s/group\ \=\ www/group\ \=\ $FPMUSER/g" /etc/php-fpm.d/"$FPMUSER".conf
 			sed -i "s/listen\ \=\ 127.0.0.1/\;listen\ \=\ 127.0.0.1/g" /etc/php-fpm.d/"$FPMUSER".conf
 			sed -i "s/\;listen\ \= \/run\/php\-fpm\/www.sock/listen\ \=\ \/run\/php\-fpm\/$FPMUSER.sock/g" /etc/php-fpm.d/"$FPMUSER".conf
-			sed -i "s/\;listen.owner\ \=\ root/listen.owner\ \=\ nginx/g" /etc/php-fpm.d/"$FPMUSER".conf
-			sed -i "s/\;listen.group\ \=\ root/listen.group\ \=\ $FPMUSER/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "/listen.owner\ \=/c\listen.owner\ \=\ nginx" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "/listen.group\ \=/c\listen.group\ \=\ $FPMUSER" /etc/php-fpm.d/"$FPMUSER".conf
 			echo "New user and PHP pool $FPMUSER has been created with password $FPMPASS."
 		fi
 	fi
