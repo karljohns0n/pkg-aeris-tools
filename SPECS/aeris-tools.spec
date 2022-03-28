@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.11
+Version:		1.12
 Release:		5%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -17,6 +17,7 @@ Source3:		cpwpcheck.sh
 Source4:		archivecheck.sh
 Source5:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
 Source6:		backup-restic.sh
+Source7:		apache-top2.py
 
 Source100:		aeris.sh
 
@@ -37,7 +38,7 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 install -d -m 0700 %{buildroot}/opt/aeris
 install -d -m 0700 %{buildroot}/opt/aeris/tools
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{buildroot}/opt/aeris/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}/opt/aeris/tools
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
@@ -58,6 +59,12 @@ fi
 
 
 %changelog
+* Mon Mar 28 2022 Karl Johnson <karljohnson.it@gmail.com> - 1.12-5
+- Bump mysqltuner.pl to 1.9.6
+- Add new apache-top.py compatible with MPM Event
+- Fix phpfpmadd for Remi PHP
+- Add GoAccess functions
+
 * Sat Nov 13 2021 Karl Johnson <karljohnson.it@gmail.com> - 1.11-5
 - Fix phpfpmadd for PHP 7.4
 - Bump mysqltuner.pl to 1.8.5
@@ -102,7 +109,6 @@ fi
 - Bump mysqltuner 1.7.19
 - Add ionice to backup-mysql script
 - Disable tables locking during the dump with backup-mysql script
-
 
 * Mon Feb 18 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.2-1
 - Fix apache-top view for recent cPanel/Apache

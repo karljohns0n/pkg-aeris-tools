@@ -6,6 +6,7 @@ HISTSIZE=10000
 
 ## cPanel
 alias apachetop="/opt/aeris/tools/apache-top.py -u http://127.0.0.1/whm-server-status"
+alias apachetop2="/opt/aeris/tools/apache-top2.py -u http://127.0.0.1/whm-server-status"
 alias apachelogs="tail -f /var/log/apache2/error_log"
 alias eximlogs="tail -f /var/log/exim_mainlog"
 
@@ -106,13 +107,24 @@ phpfpmadd() {
 			echo "$FPMPASS" | passwd "$FPMUSER" --stdin
 			cp /etc/php-fpm.d/www.conf /etc/php-fpm.d/"$FPMUSER".conf
 			sed -i "s/\[www\]/\[$FPMUSER\]/g" /etc/php-fpm.d/"$FPMUSER".conf
-			sed -i "s/user\ \=\ www/user\ \=\ $FPMUSER/g" /etc/php-fpm.d/"$FPMUSER".conf
-			sed -i "s/group\ \=\ www/group\ \=\ $FPMUSER/g" /etc/php-fpm.d/"$FPMUSER".conf
-			sed -i "s/listen\ \=\ 127.0.0.1/\;listen\ \=\ 127.0.0.1/g" /etc/php-fpm.d/"$FPMUSER".conf
-			sed -i "s/\;listen\ \= \/run\/php\-fpm\/www.sock/listen\ \=\ \/run\/php\-fpm\/$FPMUSER.sock/g" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "/^user\ \=/c\user = $FPMUSER" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "/^group\ \=/c\group = $FPMUSER" /etc/php-fpm.d/"$FPMUSER".conf
+			sed -i "/^listen\ \=/c\listen\ \=\ \/run\/php\-fpm\/$FPMUSER.sock" /etc/php-fpm.d/"$FPMUSER".conf
 			sed -i "/listen.owner\ \=/c\listen.owner\ \=\ nginx" /etc/php-fpm.d/"$FPMUSER".conf
 			sed -i "/listen.group\ \=/c\listen.group\ \=\ $FPMUSER" /etc/php-fpm.d/"$FPMUSER".conf
 			echo "New user and PHP pool $FPMUSER has been created with password $FPMPASS."
 		fi
 	fi
+}
+
+# GoAccess
+
+goaccess-live() {
+	goid=$(openssl rand -hex 10)
+	echo "Link: http://$(hostname)/$goid.html" ; goaccess /var/log/nginx/*-access_log -o /usr/share/nginx/html/"$goid".html --real-time-html ; rm -fv /usr/share/nginx/html/"$goid".html
+}
+
+goaccess-all() {
+	goid=$(openssl rand -hex 10)
+	echo "Link: http://$(hostname)/$goid.html" ; zcat -f /var/log/nginx/*-access_log* | goaccess -o /usr/share/nginx/html/"$goid".html --real-time-html ; rm -fv /usr/share/nginx/html/"$goid".html
 }
