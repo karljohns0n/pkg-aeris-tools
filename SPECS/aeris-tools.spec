@@ -1,8 +1,8 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.12
-Release:		5%{?dist}
+Version:		1.13
+Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
 Group:			Utilities/Console
@@ -11,21 +11,30 @@ URL:			https://repo.aerisnetwork.com
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:		https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl
-Source1:		apache-top.py
-Source2:		backup-mysql.sh
-Source3:		cpwpcheck.sh
-Source4:		archivecheck.sh
-Source5:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
-Source6:		backup-restic.sh
-Source7:		apache-top2.py
+Source1:		backup-mysql.sh
+Source2:		cpwpcheck.sh
+Source3:		archivecheck.sh
+Source4:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
+Source5:		backup-restic.sh
 
 Source100:		aeris.sh
 
-BuildRequires:	setup
+Source200:		apache-top.py
+Source201:		apache-top2.py
 
-Requires:		mutt mailx
+BuildRequires:	setup
+Requires:		mutt
+
 %if 0%{?rhel} >= 7
 Requires:		perl-Getopt-Long
+%endif
+
+%if 0%{?rhel} <= 8
+Requires:		mailx
+%endif
+
+%if 0%{?rhel} == 9
+Requires:		s-nail
 %endif
 
 %description
@@ -38,7 +47,14 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 install -d -m 0700 %{buildroot}/opt/aeris
 install -d -m 0700 %{buildroot}/opt/aeris/tools
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}/opt/aeris/tools
+
+%if 0%{?rhel} <= 8
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
+%endif
+
+%if 0%{?rhel} == 9
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{buildroot}/opt/aeris/tools
+%endif
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
@@ -59,6 +75,10 @@ fi
 
 
 %changelog
+* Fri Jul 15 2022 Karl Johnson <karljohnson.it@gmail.com> - 1.13-1
+- Add support for el9
+- Bump mysqltuner.pl to 2.0.5
+
 * Mon Mar 28 2022 Karl Johnson <karljohnson.it@gmail.com> - 1.12-5
 - Bump mysqltuner.pl to 1.9.6
 - Add new apache-top.py compatible with MPM Event

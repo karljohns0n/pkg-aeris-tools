@@ -10,8 +10,9 @@ alias apachetop2="/opt/aeris/tools/apache-top2.py -u http://127.0.0.1/whm-server
 alias apachelogs="tail -f /var/log/apache2/error_log"
 alias eximlogs="tail -f /var/log/exim_mainlog"
 
-## Git
+## Dev
 alias gs="git status -u"
+alias pa="php artisan"
 
 ## Hypervisor
 alias megacli="/opt/megaraid/megacli"

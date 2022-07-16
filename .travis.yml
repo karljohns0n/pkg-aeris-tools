@@ -8,11 +8,11 @@ env:
   - dist: centos
     version: 7
     pkg_arch: x86_64
-  - dist: almalinux
+  - dist: rockylinux
     version: 8
     pkg_arch: x86_64
-  - dist: rockylinux/rockylinux
-    version: 8
+  - dist: rockylinux
+    version: 9
     pkg_arch: x86_64
 
 services:
