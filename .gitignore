@@ -4,5 +4,6 @@ SOURCES/*.tar.bz2
 SOURCES/*.tar.gz
 SOURCES/mysqltuner.pl
 SOURCES/spectre-meltdown-checker.sh
+SOURCES/yabs.sh
 SRPMS
 .DS_Store

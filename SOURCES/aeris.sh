@@ -27,11 +27,12 @@ alias purge-nginx-cache="rm -rf /var/lib/nginx/cache/fastcgi/*"
 alias clear-history="cat /dev/null > ~/.bash_history ; history -c"
 alias htop="htop -C"
 alias ll="ls -alh --color=auto"
+alias tailf="tail -f"
 alias vi="vim"
 
 ## Other
 alias ttfb="curl -s -o /dev/null -w 'Connect: %{time_connect}s\nTTFB: %{time_starttransfer}s\nTotal time: %{time_total}s \n'"
-
+alias yabs="/opt/aeris/tools/yabs.sh -r56"
 
 # MySQL
 

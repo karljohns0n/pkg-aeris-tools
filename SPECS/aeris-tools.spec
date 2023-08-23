@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.13
+Version:		1.14
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -16,6 +16,7 @@ Source2:		cpwpcheck.sh
 Source3:		archivecheck.sh
 Source4:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
 Source5:		backup-restic.sh
+Source6:		https://raw.githubusercontent.com/masonr/yet-another-bench-script/master/yabs.sh
 
 Source100:		aeris.sh
 
@@ -45,15 +46,15 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 %install
 
-install -d -m 0700 %{buildroot}/opt/aeris
-install -d -m 0700 %{buildroot}/opt/aeris/tools
+install -d -m 0755 %{buildroot}/opt/aeris
+install -d -m 0755 %{buildroot}/opt/aeris/tools
 
 %if 0%{?rhel} <= 8
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
 %endif
 
 %if 0%{?rhel} == 9
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{buildroot}/opt/aeris/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{buildroot}/opt/aeris/tools
 %endif
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
@@ -69,12 +70,19 @@ fi
 %files
 %defattr(-,root,root,-)
 %attr(0700,root,root) /opt/aeris/tools/*
+%attr(0755,root,root) /opt/aeris/tools/yabs.sh
 %dir /opt/aeris
 %dir /opt/aeris/tools
 %{_sysconfdir}/profile.d/z-aeris.sh
 
 
 %changelog
+* Tue Aug 22 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.14-1
+- Bump mysqltuner.pl to 2.2.8
+- Bump spectre-meltdown-checker to latest including Downfall
+- Add YABS script
+- Increase restic backup retention of +1 month
+
 * Fri Jul 15 2022 Karl Johnson <karljohnson.it@gmail.com> - 1.13-1
 - Add support for el9
 - Bump mysqltuner.pl to 2.0.5

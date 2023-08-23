@@ -3,10 +3,14 @@
 # Restic bash wrapper for cron setup
 # Currently supporting AWS S3 and Backblaze B2 as destination
 #
-# by Karl Johnson -- karljohnson.it@gmail.com -- kj @ Freenode
+# Do not make any modification in this script, it's maintained by Aeris Network package manager <https://repo.aerisnetwork.com/>.
 #
-# Version 1.2
+# Karl Johnson <karljohnson.it@gmail.com>
 #
+# Examples:
+# 
+# ./backup-restic.sh -d aws -p "/backup /etc /home" | mail -s "Restic backup report for: $(hostname)" $EMAIL
+# ./backup-restic.sh -d backblaze -p "/backup /etc /home" | mail -s "Restic backup report for: $(hostname)" $EMAIL
 
 RESTIC="$(which restic)"
 
@@ -103,7 +107,7 @@ elif [[ "$DESTBACK" == "backblaze" ]]; then
 fi
 
 echo -e "\n\n==> Cleaning old snapshots\n"
-$RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 3 --prune
+$RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 4 --prune
 
 echo -e "\n\n==> Your data is now stored on ${DESTBACK^^} using AES-256 encryption"
 echo -e "==> Don't forget to run 'restic check' once in a while to ensure backup integrity"
