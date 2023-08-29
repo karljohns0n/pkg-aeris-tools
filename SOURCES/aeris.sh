@@ -54,6 +54,8 @@ mysql-add() {
 	fi
 }
 
+## Optimize all databases
+
 mysql-optimize() {
 	/usr/bin/mysqlcheck --defaults-extra-file=/root/.my.cnf -u root --auto-repair --optimize --all-databases
 	for dbs in $(mysql -e 'show databases' -s --skip-column-names); do for tbl in $(mysql $dbs -sNe 'show tables'); do mysql $dbs -e "ANALYZE TABLE $tbl PERSISTENT FOR ALL;"; done; done
