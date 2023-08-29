@@ -38,7 +38,7 @@ alias yabs="/opt/aeris/tools/yabs.sh -r56"
 
 ## Create MySQL DB with user and password
  
-mysqladd() {
+mysql-add() {
 	if [[ $# -ne 2 ]]; then
 		echo 1>&2 "Usage: mysqladd database user"
 	else
@@ -52,6 +52,11 @@ mysqladd() {
 
 		echo "MySQL database $MYDB associated with user $MYUSER and password $MYPASS has been created."
 	fi
+}
+
+mysql-optimize() {
+	/usr/bin/mysqlcheck --defaults-extra-file=/root/.my.cnf -u root --auto-repair --optimize --all-databases
+	for dbs in $(mysql -e 'show databases' -s --skip-column-names); do for tbl in $(mysql $dbs -sNe 'show tables'); do mysql $dbs -e "ANALYZE TABLE $tbl PERSISTENT FOR ALL;"; done; done
 }
 
 
