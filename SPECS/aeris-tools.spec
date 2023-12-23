@@ -77,11 +77,11 @@ fi
 
 
 %changelog
-* Tue Aug 22 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.15-1
+* Sat Dec 23 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.15-1
 - Bump mysqltuner.pl to 2.5.0
 - Bump spectre-meltdown-checker to latest
 - Bump YABS script to latest
-
+- Enhance backup-mysql script
 
 * Tue Aug 22 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.14-1
 - Bump mysqltuner.pl to 2.2.8
