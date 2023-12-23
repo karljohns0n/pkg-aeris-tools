@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.14
+Version:		1.15
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -35,7 +35,7 @@ Requires:		mailx
 %endif
 
 %if 0%{?rhel} == 9
-Requires:		s-nail
+Requires:		s-nail perl-diagnostics
 %endif
 
 %description
@@ -77,6 +77,12 @@ fi
 
 
 %changelog
+* Tue Aug 22 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.15-1
+- Bump mysqltuner.pl to 2.5.0
+- Bump spectre-meltdown-checker to latest
+- Bump YABS script to latest
+
+
 * Tue Aug 22 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.14-1
 - Bump mysqltuner.pl to 2.2.8
 - Bump spectre-meltdown-checker to latest including Downfall
