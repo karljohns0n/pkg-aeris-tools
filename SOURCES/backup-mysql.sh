@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 #
+# backup-mysql.sh - Version 1.5.0
+# Copyright (C) Karl Johnson - karljohnson.it@gmail.com
+#
 # SQL Backup and Optimize - All Databases
 # Number of extra backup retention days can be configured with argument -d INTEGER
 # This script should be configured as a daily cron
 # Tested up to MariaDB 10.11
-#
-# by Karl Johnson -- karljohnson.it@gmail.com
 #
 # Examples:
 #
