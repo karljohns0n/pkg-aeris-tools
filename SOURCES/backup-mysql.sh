@@ -7,6 +7,7 @@
 # Number of extra backup retention days can be configured with argument -d INTEGER
 # This script should be configured as a daily cron
 # Tested up to MariaDB 10.11
+# Do not make any modification to this script, it's maintained by Aeris Network <https://repo.aerisnetwork.com/>
 #
 # Examples:
 #

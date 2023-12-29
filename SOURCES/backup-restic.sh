@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
+# backup-restic.sh - Version 1.2.0
+# Copyright (C) Karl Johnson - karljohnson.it@gmail.com
+#
 # Restic bash wrapper for cron setup
 # Currently supporting AWS S3 and Backblaze B2 as destination
-#
-# Do not make any modification in this script, it's maintained by Aeris Network package manager <https://repo.aerisnetwork.com/>.
-#
-# Karl Johnson <karljohnson.it@gmail.com>
+# Do not make any modification to this script, it's maintained by Aeris Network <https://repo.aerisnetwork.com/>
 #
 # Examples:
 # 
