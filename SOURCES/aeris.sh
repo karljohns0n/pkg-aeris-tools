@@ -1,4 +1,7 @@
-# Config
+# aeris.sh - Version 1.8.0
+# Copyright (C) Karl Johnson - karljohnson.it@gmail.com
+# Do not make any modification to this script, it's maintained by Aeris Network <https://repo.aerisnetwork.com/>
+#
 
 HISTSIZE=10000
 
