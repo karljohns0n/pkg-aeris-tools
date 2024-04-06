@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.15
+Version:		1.16
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -77,6 +77,11 @@ fi
 
 
 %changelog
+* Sat Apr 6 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.16-1
+- Bump mysqltuner.pl to 2.5.3
+- Bump spectre-meltdown-checker to latest
+- Bump YABS script to latest
+
 * Sat Dec 23 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.15-1
 - Bump mysqltuner.pl to 2.5.0
 - Bump spectre-meltdown-checker to latest
