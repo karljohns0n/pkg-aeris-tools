@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.16
+Version:		1.17
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -17,6 +17,7 @@ Source3:		archivecheck.sh
 Source4:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
 Source5:		backup-restic.sh
 Source6:		https://raw.githubusercontent.com/masonr/yet-another-bench-script/master/yabs.sh
+Source7:		https://github.com/gordalina/cachetool/releases/latest/download/cachetool.phar
 
 Source100:		aeris.sh
 
@@ -49,13 +50,7 @@ This package includes a set of tools and scripts for Web hosting servers from di
 install -d -m 0755 %{buildroot}/opt/aeris
 install -d -m 0755 %{buildroot}/opt/aeris/tools
 
-%if 0%{?rhel} <= 8
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
-%endif
-
-%if 0%{?rhel} == 9
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{buildroot}/opt/aeris/tools
-%endif
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
@@ -70,6 +65,7 @@ fi
 %files
 %defattr(-,root,root,-)
 %attr(0700,root,root) /opt/aeris/tools/*
+%attr(0755,root,root) /opt/aeris/tools/cachetool.phar
 %attr(0755,root,root) /opt/aeris/tools/yabs.sh
 %dir /opt/aeris
 %dir /opt/aeris/tools
@@ -77,6 +73,10 @@ fi
 
 
 %changelog
+* Tue Apr 23 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.17-1
+- Add cachetool script
+- Bump YABS script to latest
+
 * Sat Apr 6 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.16-1
 - Bump mysqltuner.pl to 2.5.3
 - Bump spectre-meltdown-checker to latest

@@ -1,7 +1,7 @@
 # Aeris Tools
 
 [![ProjectStatus](https://img.shields.io/badge/status-active-brightgreen.svg)](#)
-[![Release 1.16-1](https://img.shields.io/badge/release-1.15--1-success.svg)](#)
+[![Release 1.17-1](https://img.shields.io/badge/release-1.15--1-success.svg)](#)
 
 ## Synopsis
 
@@ -16,6 +16,7 @@ This package provides a set of tools and scripts for Web hosting servers from di
 * archivecheck.sh (1.1)
 * backup-mysql.sh (1.5.0)
 * backup-restic.sh (1.2.0)
+* cachetool.phar (latest)
 * cpwpcheck.sh (1.1)
 * mysqltuner (latest)
 * spectre-meltdown-checker (latest)
