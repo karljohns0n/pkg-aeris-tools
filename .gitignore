@@ -2,8 +2,8 @@ BUILD
 RPMS
 SOURCES/*.tar.bz2
 SOURCES/*.tar.gz
+SOURCES/cachetool.phar
 SOURCES/mysqltuner.pl
 SOURCES/spectre-meltdown-checker.sh
 SOURCES/yabs.sh
 SRPMS
-.DS_Store
