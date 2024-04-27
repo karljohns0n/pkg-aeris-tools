@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.17
+Version:		1.18
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -50,7 +50,13 @@ This package includes a set of tools and scripts for Web hosting servers from di
 install -d -m 0755 %{buildroot}/opt/aeris
 install -d -m 0755 %{buildroot}/opt/aeris/tools
 
+%if 0%{?rhel} <= 8
 install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
+%endif
+
+%if 0%{?rhel} == 9
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}/opt/aeris/tools
+%endif
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
@@ -73,6 +79,9 @@ fi
 
 
 %changelog
+* Sat Apr 27 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.18-1
+- Remove python2 scripts on el9
+
 * Tue Apr 23 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.17-1
 - Add cachetool script
 - Bump YABS script to latest
