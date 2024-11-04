@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
 #
-# backup-restic.sh - Version 1.2.0
+# backup-restic.sh - Version 1.3.0
 # Copyright (C) Karl Johnson - karljohnson.it@gmail.com
 #
 # Restic bash wrapper for cron setup
-# Currently supporting AWS S3 and Backblaze B2 as destination
+# Currently supporting S3 compliant, AWS and Backblaze B2 as destination
 # Do not make any modification to this script, it's maintained by Aeris Network <https://repo.aerisnetwork.com/>
 #
 # Examples:
 # 
+# ./backup-restic.sh -d s3 -p "/backup /etc /home" | mail -s "Restic backup report for: $(hostname)" $EMAIL
 # ./backup-restic.sh -d aws -p "/backup /etc /home" | mail -s "Restic backup report for: $(hostname)" $EMAIL
 # ./backup-restic.sh -d backblaze -p "/backup /etc /home" | mail -s "Restic backup report for: $(hostname)" $EMAIL
 
 RESTIC="$(which restic)"
+EXCLUDE_PATHS=".cache"
 
 usage () { 
-	echo "Restic bash wrapper. Currently supporting AWS S3 and Backblaze B2 as destination.";
-	echo "Script usage: restic.sh -d [aws|backblaze] -p \"[each path separated with space]\"";
+	echo "Restic bash wrapper. Currently supporting S3 compliant, AWS and Backblaze B2 as destination.";
+	echo "Script usage: restic.sh -d [s3|aws|backblaze] -p \"[each path separated with space]\"";
 	exit 0;
 }
 
@@ -24,7 +26,7 @@ while getopts :d:p:h option; do
 	case "${option}" in
 	d)
 		DESTBACK=${OPTARG}
-		[[ "$DESTBACK" == "aws" || "$DESTBACK" == "backblaze" ]] || usage
+		[[ "$DESTBACK" == "s3" || "$DESTBACK" == "aws" || "$DESTBACK" == "backblaze" ]] || usage
 		;;
 	p)
 		RPATH=${OPTARG}
@@ -70,7 +72,7 @@ if [[ -z "$RESTIC_PASSWORD" ]]; then
 	echo "Variable RESTIC_PASSWORD must be configured" && exit 1
 fi
 
-if [[ "$DESTBACK" == "aws" ]]; then
+if [[ "$DESTBACK" == "s3" || "$DESTBACK" == "aws" ]]; then
 	if [[ -z "$AWS_ACCESS_KEY_ID" ]]; then
 		echo "Variable AWS_ACCESS_KEY_ID must be configured" && exit 1
 	fi
@@ -100,14 +102,16 @@ echo -e "\n==> Checking for restic update\n"
 $RESTIC self-update
 
 echo -e "\n\n==> Processing new snapshot\n"
-if [[ "$DESTBACK" == "aws" ]]; then
-	$RESTIC backup -o s3.storage-class=STANDARD_IA $RPATH --exclude=".cache"
+if [[ "$DESTBACK" == "s3" ]]; then
+	$RESTIC backup $RPATH --exclude="$EXCLUDE_PATHS"
+elif [[ "$DESTBACK" == "aws" ]]; then
+	$RESTIC backup -o s3.storage-class=STANDARD_IA $RPATH --exclude="$EXCLUDE_PATHS"
 elif [[ "$DESTBACK" == "backblaze" ]]; then
-	$RESTIC backup -o b2.connections=8 $RPATH --exclude=".cache"
+	$RESTIC backup -o b2.connections=8 $RPATH --exclude="$EXCLUDE_PATHS"
 fi
 
 echo -e "\n\n==> Cleaning old snapshots\n"
-$RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 4 --prune
+$RESTIC forget --keep-last 2 --keep-daily 7 --keep-monthly 5 --prune
 
 echo -e "\n\n==> Your data is now stored on ${DESTBACK^^} using AES-256 encryption"
 echo -e "==> Don't forget to run 'restic check' once in a while to ensure backup integrity"

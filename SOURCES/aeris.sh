@@ -1,4 +1,4 @@
-# aeris.sh - Version 1.8.0
+# aeris.sh - Version 1.9.0
 # Copyright (C) Karl Johnson - karljohnson.it@gmail.com
 # Do not make any modification to this script, it's maintained by Aeris Network <https://repo.aerisnetwork.com/>
 #
@@ -18,6 +18,7 @@ alias gs="git status -u"
 alias pa="php artisan"
 
 ## Hypervisor
+alias dc="docker compose"
 alias megacli="/opt/megaraid/megacli"
 alias storcli="/opt/megaraid/storcli"
 alias xenstop="/usr/lib64/xen/bin/xendomains stop"

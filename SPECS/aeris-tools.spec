@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.18
+Version:		1.19
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -79,6 +79,9 @@ fi
 
 
 %changelog
+* Tue Nov 5 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.19-1
+- Enhance restic backup with S3 compliant support
+
 * Sat Apr 27 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.18-1
 - Remove python2 scripts on el9
 
