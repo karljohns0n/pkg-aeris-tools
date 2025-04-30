@@ -1,7 +1,7 @@
 # Aeris Tools
 
 [![ProjectStatus](https://img.shields.io/badge/status-active-brightgreen.svg)](#)
-[![Release 1.19-1](https://img.shields.io/badge/release-1.19--1-success.svg)](#)
+[![Release](https://img.shields.io/badge/release-1.20--1-success.svg)](#)
 
 ## Synopsis
 
@@ -14,7 +14,7 @@ This package provides a set of tools and scripts for Web hosting servers from di
 * apache-top.py (2018)
 * apache-top2.py (2020)
 * archivecheck.sh (1.1)
-* backup-mysql.sh (1.5.0)
+* backup-mysql.sh (1.6.0)
 * backup-restic.sh (1.3.0)
 * cachetool.phar (latest)
 * cpwpcheck.sh (1.1)

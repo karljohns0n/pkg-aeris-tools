@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.19
+Version:		1.20
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -79,6 +79,12 @@ fi
 
 
 %changelog
+* Wed Apr 30 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.20-1
+- Allow SQL backup script to use mariadb client
+- Bump mysqltuner.pl to 2.6.2
+- Bump YABS to 2025-04-20
+- Bump spectre-meltdown-checker 0.46+
+
 * Tue Nov 5 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.19-1
 - Enhance restic backup with S3 compliant support
 
