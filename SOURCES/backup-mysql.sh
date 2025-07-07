@@ -124,7 +124,7 @@ echo -e "\nStarting SQL Analyze...\n"
 if [ "$ANALYZE" = "TRUE" ]; then
     for alldbs in $("$SQLBIN" --defaults-extra-file=/root/.my.cnf -e 'SHOW DATABASES' -s --skip-column-names | grep -vE '^(information_schema|performance_schema|mysql|sys)$'); do
         for alltbl in $("$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -sNe 'SHOW TABLES'); do
-            "$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -e "ANALYZE TABLE $alltbl PERSISTENT FOR ALL;"
+            "$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -e "ANALYZE TABLE $alltbl;"
         done
     done
 fi

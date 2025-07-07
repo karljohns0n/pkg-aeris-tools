@@ -1,4 +1,4 @@
-# aeris.sh - Version 1.9.0
+# aeris.sh - Version 1.10.0
 # Copyright (C) Karl Johnson - karljohnson.it@gmail.com
 # Do not make any modification to this script, it's maintained by Aeris Network <https://repo.aerisnetwork.com/>
 #
@@ -12,6 +12,7 @@ alias apachetop="/opt/aeris/tools/apache-top.py -u http://127.0.0.1/whm-server-s
 alias apachetop2="/opt/aeris/tools/apache-top2.py -u http://127.0.0.1/whm-server-status"
 alias apachelogs="tail -f /var/log/apache2/error_log"
 alias eximlogs="tail -f /var/log/exim_mainlog"
+alias nginxlogs="tail -f /var/log/nginx/error.log"
 
 ## Dev
 alias gs="git status -u"
@@ -24,7 +25,6 @@ alias storcli="/opt/megaraid/storcli"
 alias xenstop="/usr/lib64/xen/bin/xendomains stop"
 
 ## LEMP
-alias nginxlogs="tail -f /var/log/nginx/error.log"
 alias purge-nginx-cache="rm -rf /var/lib/nginx/cache/fastcgi/*"
 
 ## OS
@@ -38,31 +38,65 @@ alias vi="vim"
 alias ttfb="curl -s -o /dev/null -w 'Connect: %{time_connect}s\nTTFB: %{time_starttransfer}s\nTotal time: %{time_total}s \n'"
 alias yabs="/opt/aeris/tools/yabs.sh -r56"
 
-# MySQL
+# MySQL/MariaDB
 
-## Create MySQL DB with user and password
+get_sql_bin() {
+	local type=$1
+	
+	case $type in
+		"client")
+			if command -v mysql >/dev/null 2>&1; then
+				echo "mysql"
+			elif command -v mariadb >/dev/null 2>&1; then
+				echo "mariadb"
+			else
+				echo "Error: Neither mysql nor mariadb client found" >&2
+				return 1
+			fi
+			;;
+		"check")
+			if command -v mysqlcheck >/dev/null 2>&1; then
+				echo "mysqlcheck"
+			elif command -v mariadbcheck >/dev/null 2>&1; then
+				echo "mariadbcheck"
+			else
+				echo "Error: Neither mysqlcheck nor mariadbcheck found" >&2
+				return 1
+			fi
+			;;
+		*)
+			echo "Error: Invalid type. Use 'client' or 'check'" >&2
+			return 1
+			;;
+	esac
+}
+
+## Create MySQL/MariaDB DB with user and password
  
 mysql-add() {
 	if [[ $# -ne 2 ]]; then
-		echo 1>&2 "Usage: mysqladd database user"
+		echo 1>&2 "Usage: mysql-add database user"
 	else
-		MYPASS=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
-		MYDB=$1
-		MYUSER=$2
+		SQL_BIN=$(get_sql_bin client) || return 1
+		SQLPASS=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
+		SQLDB=$1
+		SQLUSER=$2
 
-		mysql -e "create database $MYDB;"
-		mysql -e "grant all privileges on $MYDB.* to '$MYUSER'@'localhost' identified by '$MYPASS';"
-		mysql -e "FLUSH PRIVILEGES;"
+		$SQL_BIN -e "CREATE DATABASE $SQLDB;"
+		$SQL_BIN -e "GRANT ALL PRIVILEGES ON $SQLDB.* TO '$SQLUSER'@'localhost' IDENTIFIED BY '$SQLPASS';"
+		$SQL_BIN -e "FLUSH PRIVILEGES;"
 
-		echo "MySQL database $MYDB associated with user $MYUSER and password $MYPASS has been created."
+		echo "MySQL/MariaDB database $SQLDB associated with user $SQLUSER and password $SQLPASS has been created."
 	fi
 }
 
 ## Optimize all databases
 
 mysql-optimize() {
-	/usr/bin/mysqlcheck --defaults-extra-file=/root/.my.cnf -u root --auto-repair --optimize --all-databases
-	for dbs in $(mysql -e 'show databases' -s --skip-column-names); do for tbl in $(mysql $dbs -sNe 'show tables'); do mysql $dbs -e "ANALYZE TABLE $tbl PERSISTENT FOR ALL;"; done; done
+	SQL_BIN=$(get_sql_bin client) || return 1
+	SQLCHECK_BIN=$(get_sql_bin check) || return 1
+	
+	$SQLCHECK_BIN --defaults-extra-file=/root/.my.cnf -u root --auto-repair --optimize --all-databases
 }
 
 
