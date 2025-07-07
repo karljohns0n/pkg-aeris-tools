@@ -104,8 +104,8 @@ mysql-optimize() {
 
 ## SSL generation with standalone, nginx plugin or wildcard using DNS
 
-alias ssl-standalone="certbot certonly --agree-tos --register-unsafely-without-email --rsa-key-size 4096 --authenticator standalone --installer nginx --allow-subset-of-names --pre-hook \"systemctl stop monit nginx\" --post-hook \"systemctl start nginx monit\""
-alias ssl-nginx="certbot certonly --agree-tos --register-unsafely-without-email --rsa-key-size 4096 --installer nginx --allow-subset-of-names"
+alias ssl-standalone="certbot certonly --agree-tos --register-unsafely-without-email --key-type ecdsa --authenticator standalone --installer nginx --allow-subset-of-names --pre-hook \"systemctl stop monit nginx\" --post-hook \"systemctl start nginx monit\""
+alias ssl-nginx="certbot certonly --agree-tos --register-unsafely-without-email --nginx --key-type ecdsa --allow-subset-of-names"
 
 ssl-wildcard() {
 	if [[ $# -lt 1 ]]; then
@@ -122,7 +122,7 @@ ssl-wildcard() {
 			chmod 0700 /etc/letsencrypt/acme-dns-auth.py
 		fi
 
-		certbot certonly --agree-tos --register-unsafely-without-email --rsa-key-size 4096 --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges "$@"
+		certbot certonly --agree-tos --register-unsafely-without-email --key-type ecdsa --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges "$@"
 	fi
 }
 
