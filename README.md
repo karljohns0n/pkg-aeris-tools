@@ -23,7 +23,7 @@ This package provides a set of tools and scripts for Web hosting servers from di
 
 ### Other
 
-* profile.d/z-aeris.sh
+* profile.d/z-aeris.sh (1.10.0)
 
 ## Easy installation for CentOS
 

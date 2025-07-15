@@ -3,7 +3,10 @@
 # Do not make any modification to this script, it's maintained by Aeris Network <https://repo.aerisnetwork.com/>
 #
 
+HISTTIMEFORMAT="%F %T "
 HISTSIZE=10000
+HISTFILESIZE=20000
+HISTIGNORE="clear:exit"
 
 # Alias
 
@@ -22,7 +25,6 @@ alias pa="php artisan"
 alias dc="docker compose"
 alias megacli="/opt/megaraid/megacli"
 alias storcli="/opt/megaraid/storcli"
-alias xenstop="/usr/lib64/xen/bin/xendomains stop"
 
 ## LEMP
 alias purge-nginx-cache="rm -rf /var/lib/nginx/cache/fastcgi/*"
