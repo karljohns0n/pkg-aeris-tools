@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.20
+Version:		1.21
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -35,7 +35,7 @@ Requires:		perl-Getopt-Long
 Requires:		mailx
 %endif
 
-%if 0%{?rhel} == 9
+%if 0%{?rhel} >= 9
 Requires:		s-nail perl-diagnostics
 %endif
 
@@ -54,7 +54,7 @@ install -d -m 0755 %{buildroot}/opt/aeris/tools
 install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
 %endif
 
-%if 0%{?rhel} == 9
+%if 0%{?rhel} >= 9
 install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}/opt/aeris/tools
 %endif
 
@@ -79,6 +79,11 @@ fi
 
 
 %changelog
+* Mon Sep 1 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.21-1
+- Add el10 support
+- Bump mysqltuner.pl to 2.7.0
+- Bump YABS to 2025-07-08
+
 * Wed Apr 30 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.20-1
 - Allow SQL backup script to use mariadb client
 - Bump mysqltuner.pl to 2.6.2
