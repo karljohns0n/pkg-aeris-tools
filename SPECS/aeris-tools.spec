@@ -1,7 +1,7 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:			aeris-tools
-Version:		1.21
+Version:		1.22
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 
@@ -79,6 +79,11 @@ fi
 
 
 %changelog
+* Sun Oct 26 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.22-1
+- Add GitHub Actions builder
+- Bump YABS to 2025-09-08
+- Bump spectre-meltdown-checker to 2025-08-25
+
 * Mon Sep 1 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.21-1
 - Add el10 support
 - Bump mysqltuner.pl to 2.7.0

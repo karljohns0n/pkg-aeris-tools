@@ -1,7 +1,7 @@
 # Aeris Tools
 
 [![ProjectStatus](https://img.shields.io/badge/status-active-brightgreen.svg)](#)
-[![Release](https://img.shields.io/badge/release-1.21--1-success.svg)](#)
+[![Release](https://img.shields.io/badge/release-1.22--1-success.svg)](#)
 
 ## Synopsis
 
@@ -27,7 +27,7 @@ This package provides a set of tools and scripts for Web hosting servers based o
 
 ## Setup
 
-There's packages available for EL 6, 7, 8 and 9. The easiest way to install it is using Aeris Network yum repository:
+There's packages available for EL 6, 7, 8, 9 and 10. The easiest way to install it is using Aeris Network yum repository:
 
 ```bash
 EL6 > yum install -y https://repo.aerisnetwork.com/pub/aeris-release-6.rpm
