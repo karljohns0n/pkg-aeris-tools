@@ -1,0 +1,145 @@
+name: aeris-tools
+
+on: 
+  push:
+    branches: 
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  buildrpm:
+    name: Build el${{ matrix.VERSION }} ${{ matrix.PKG_ARCH }} rpm
+    runs-on: ${{ matrix.RUNNER }}
+    timeout-minutes: 60
+    env:
+      PKG_NAME: aeris-tools
+      RPMBUILD_IMAGE: docker.io/karljohns0n/rpmbuild:9
+      DOCKER_DEFAULT_PLATFORM: ${{ matrix.PKG_ARCH == 'x86_64' && 'linux/amd64' || matrix.PKG_ARCH == 'aarch64' && 'linux/arm64' }}
+      DOCKER_OPTS: >-
+        --rm --privileged --user 0:0
+        --cap-add=SYS_ADMIN
+        --security-opt seccomp=unconfined
+        --security-opt apparmor=unconfined
+        --cgroupns=host
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - VERSION: 7
+            OS: karljohns0n/centos
+            PKG_ARCH: x86_64
+            RUNNER: ubuntu-24.04
+            OPT: ""
+          - VERSION: 8
+            OS: rockylinux/rockylinux
+            PKG_ARCH: x86_64
+            RUNNER: ubuntu-24.04
+            OPT: ""
+          - VERSION: 9
+            OS: rockylinux/rockylinux
+            PKG_ARCH: x86_64
+            RUNNER: ubuntu-24.04
+            OPT: ""
+          - VERSION: 9
+            OS: rockylinux/rockylinux
+            PKG_ARCH: aarch64
+            RUNNER: ubuntu-24.04-arm
+            OPT: ""
+          - VERSION: 10
+            OS: rockylinux/rockylinux
+            PKG_ARCH: x86_64
+            RUNNER: ubuntu-24.04
+            OPT: ""
+          - VERSION: 10
+            OS: rockylinux/rockylinux
+            PKG_ARCH: aarch64
+            RUNNER: ubuntu-24.04-arm
+            OPT: ""
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanity — show host arch and Docker info
+        run: |
+          uname -m
+          docker info --format '{{.ServerVersion}} {{.OperatingSystem}} (default platform {{.OSType}}/{{.Architecture}})'
+
+      - name: Build el${{ matrix.VERSION }} rpm with mock
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run ${DOCKER_OPTS} \
+            -e PKG_NAME="${PKG_NAME}" \
+            -v "${GITHUB_WORKSPACE}:/tmp/${PKG_NAME}" \
+            ${RPMBUILD_IMAGE} \
+            bash -lc '
+              set -euo pipefail
+
+              cd /tmp/${PKG_NAME}
+
+              PKG_VERSION=$(awk "/^Version:/{print \$2}" SPECS/${PKG_NAME}.spec)
+              PKG_RELEASE=$(awk "/^Release:/{print \$2}" SPECS/${PKG_NAME}.spec | tr -d "%{?dist}")
+
+              usermod -a -G mock root || true
+              mkdir -p /var/lib/mock /var/cache/mock
+              chown -R root:mock /var/lib/mock /var/cache/mock
+              chmod -R 0775 /var/lib/mock /var/cache/mock
+
+              spectool -g SPECS/${PKG_NAME}.spec -C SOURCES/
+
+              mock --isolation=simple \
+                   -r aeris-${{ matrix.VERSION }}-${{ matrix.PKG_ARCH }} \
+                   --spec=SPECS/${PKG_NAME}.spec \
+                   --sources=SOURCES \
+                   --resultdir=SRPMS \
+                   --buildsrpm ${{ matrix.OPT }}
+
+              mock --isolation=simple --clean \
+                   -D "dist .el${{ matrix.VERSION }}" \
+                   -r aeris-${{ matrix.VERSION }}-${{ matrix.PKG_ARCH }} \
+                   --resultdir=RPMS \
+                   --rebuild SRPMS/${PKG_NAME}-${PKG_VERSION}-${PKG_RELEASE}.el${{ matrix.VERSION }}.src.rpm ${{ matrix.OPT }}
+
+              rpm -qlp RPMS/${PKG_NAME}-${PKG_VERSION}-${PKG_RELEASE}.el${{ matrix.VERSION }}.${{ matrix.PKG_ARCH }}.rpm --noartifact
+            '
+
+      - name: Test package on el${{ matrix.VERSION }} ${{ matrix.PKG_ARCH }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run ${DOCKER_OPTS} \
+            -e PKG_NAME="${PKG_NAME}" \
+            -v "${GITHUB_WORKSPACE}:/tmp/${PKG_NAME}" \
+            ${{ matrix.OS }}:${{ matrix.VERSION }} \
+            bash -lc '
+              set -euo pipefail
+
+              cd /tmp/${PKG_NAME}
+              PKG_VERSION=$(awk "/^Version:/{print \$2}" SPECS/${PKG_NAME}.spec)
+              PKG_RELEASE=$(awk "/^Release:/{print \$2}" SPECS/${PKG_NAME}.spec | tr -d "%{?dist}")
+
+              yum clean all || true
+              bash -lc "[[ ! -f /etc/yum.repos.d/aeris.repo ]] && yum -y install https://repo.aerisnetwork.com/pub/aeris-release-$(rpm -E %{rhel}).rpm || echo continue"
+              yum install --enablerepo="aeris,aeris-testing" -y "RPMS/${PKG_NAME}-${PKG_VERSION}-${PKG_RELEASE}.el${{ matrix.VERSION }}.${{ matrix.PKG_ARCH }}.rpm"
+
+              ls -alh /opt/aeris/tools/
+              ls -alh /etc/profile.d/z-aeris.sh
+            '
+
+      - name: Upload RPMs
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PKG_NAME }}-el${{ matrix.VERSION }}-${{ matrix.PKG_ARCH }}
+          path: |
+            ${{ github.workspace }}/RPMS/*.rpm
+            ${{ github.workspace }}/RPMS/*.log
+            !${{ github.workspace }}/RPMS/*debug*.rpm
+            !${{ github.workspace }}/RPMS/*.src.rpm
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 9
