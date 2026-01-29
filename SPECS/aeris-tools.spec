@@ -7,7 +7,6 @@ Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 License:		MIT
 URL:			https://repo.aerisnetwork.com
-BuildArch:		noarch
 
 Source0:		https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl
 Source1:		backup-mysql.sh
