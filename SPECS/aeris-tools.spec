@@ -1,14 +1,13 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
+%define aeris_dir /opt/aeris
 
 Name:			aeris-tools
-Version:		1.22
+Version:		1.23
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
-
-Group:			Utilities/Console
 License:		MIT
 URL:			https://repo.aerisnetwork.com
-BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:		noarch
 
 Source0:		https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl
 Source1:		backup-mysql.sh
@@ -47,143 +46,142 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 %install
 
-install -d -m 0755 %{buildroot}/opt/aeris
-install -d -m 0755 %{buildroot}/opt/aeris/tools
+install -d -m 0755 %{buildroot}%{aeris_dir}
+install -d -m 0755 %{buildroot}%{aeris_dir}/tools
 
 %if 0%{?rhel} <= 8
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}/opt/aeris/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}%{aeris_dir}/tools
 %endif
 
 %if 0%{?rhel} >= 9
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}/opt/aeris/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}%{aeris_dir}/tools
 %endif
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
 install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 
-%clean
-if [ -d %{buildroot} ] ; then
-	rm -rf %{buildroot}
-fi
-
-%post
-
 %files
 %defattr(-,root,root,-)
-%attr(0700,root,root) /opt/aeris/tools/*
-%attr(0755,root,root) /opt/aeris/tools/cachetool.phar
-%attr(0755,root,root) /opt/aeris/tools/yabs.sh
-%dir /opt/aeris
-%dir /opt/aeris/tools
+%attr(0700,root,root) %{aeris_dir}/tools/*
+%attr(0755,root,root) %{aeris_dir}/tools/cachetool.phar
+%attr(0755,root,root) %{aeris_dir}/tools/yabs.sh
+%dir %{aeris_dir}
+%dir %{aeris_dir}/tools
 %{_sysconfdir}/profile.d/z-aeris.sh
 
 
 %changelog
-* Sun Oct 26 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.22-1
+* Thu Jan 29 2026 Karl Johnson <karljohnson.it@gmail.com> 1.23-1
+- Scripts: mariadb in priority of mysql
+- Bump mysqltuner.pl to 2.8.25
+- Bump YABS to 2025-12-29
+- Bump spectre-meltdown-checker to 2026-01-29
+
+* Sun Oct 26 2025 Karl Johnson <karljohnson.it@gmail.com> 1.22-1
 - Add GitHub Actions builder
 - Bump YABS to 2025-09-08
 - Bump spectre-meltdown-checker to 2025-08-25
 
-* Mon Sep 1 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.21-1
+* Mon Sep 1 2025 Karl Johnson <karljohnson.it@gmail.com> 1.21-1
 - Add el10 support
 - Bump mysqltuner.pl to 2.7.0
 - Bump YABS to 2025-07-08
 
-* Wed Apr 30 2025 Karl Johnson <karljohnson.it@gmail.com> - 1.20-1
+* Wed Apr 30 2025 Karl Johnson <karljohnson.it@gmail.com> 1.20-1
 - Allow SQL backup script to use mariadb client
 - Bump mysqltuner.pl to 2.6.2
 - Bump YABS to 2025-04-20
 - Bump spectre-meltdown-checker 0.46+
 
-* Tue Nov 5 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.19-1
+* Tue Nov 5 2024 Karl Johnson <karljohnson.it@gmail.com> 1.19-1
 - Enhance restic backup with S3 compliant support
 
-* Sat Apr 27 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.18-1
+* Sat Apr 27 2024 Karl Johnson <karljohnson.it@gmail.com> 1.18-1
 - Remove python2 scripts on el9
 
-* Tue Apr 23 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.17-1
+* Tue Apr 23 2024 Karl Johnson <karljohnson.it@gmail.com> 1.17-1
 - Add cachetool script
 - Bump YABS script to latest
 
-* Sat Apr 6 2024 Karl Johnson <karljohnson.it@gmail.com> - 1.16-1
+* Sat Apr 6 2024 Karl Johnson <karljohnson.it@gmail.com> 1.16-1
 - Bump mysqltuner.pl to 2.5.3
 - Bump spectre-meltdown-checker to latest
 - Bump YABS script to latest
 
-* Sat Dec 23 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.15-1
+* Sat Dec 23 2023 Karl Johnson <karljohnson.it@gmail.com> 1.15-1
 - Bump mysqltuner.pl to 2.5.0
 - Bump spectre-meltdown-checker to latest
 - Bump YABS script to latest
 - Enhance backup-mysql script
 
-* Tue Aug 22 2023 Karl Johnson <karljohnson.it@gmail.com> - 1.14-1
+* Tue Aug 22 2023 Karl Johnson <karljohnson.it@gmail.com> 1.14-1
 - Bump mysqltuner.pl to 2.2.8
 - Bump spectre-meltdown-checker to latest including Downfall
 - Add YABS script
 - Increase restic backup retention of +1 month
 
-* Fri Jul 15 2022 Karl Johnson <karljohnson.it@gmail.com> - 1.13-1
+* Fri Jul 15 2022 Karl Johnson <karljohnson.it@gmail.com> 1.13-1
 - Add support for el9
 - Bump mysqltuner.pl to 2.0.5
 
-* Mon Mar 28 2022 Karl Johnson <karljohnson.it@gmail.com> - 1.12-5
+* Mon Mar 28 2022 Karl Johnson <karljohnson.it@gmail.com> 1.12-5
 - Bump mysqltuner.pl to 1.9.6
 - Add new apache-top.py compatible with MPM Event
 - Fix phpfpmadd for Remi PHP
 - Add GoAccess functions
 
-* Sat Nov 13 2021 Karl Johnson <karljohnson.it@gmail.com> - 1.11-5
+* Sat Nov 13 2021 Karl Johnson <karljohnson.it@gmail.com> 1.11-5
 - Fix phpfpmadd for PHP 7.4
 - Bump mysqltuner.pl to 1.8.5
 - Bump spectre-meltdown-checker to latest
 
-* Wed Apr 7 2021 Karl Johnson <karljohnson.it@gmail.com> - 1.10-5
+* Wed Apr 7 2021 Karl Johnson <karljohnson.it@gmail.com> 1.10-5
 - Force mysqldump in case a view isn't valid
 - Bump mysqltuner.pl to 1.7.24
 - Bump spectre-meltdown-checker to latest
 
-* Sat Nov 7 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.9-5
+* Sat Nov 7 2020 Karl Johnson <karljohnson.it@gmail.com> 1.9-5
 - Restic wrapper now supports Backblaze B2
 - Bump mysqltuner.pl to 1.7.20
 
-* Fri Sep 18 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-5
+* Fri Sep 18 2020 Karl Johnson <karljohnson.it@gmail.com> 1.8-5
 - Require mailx
 
-* Mon Aug 31 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-4
+* Mon Aug 31 2020 Karl Johnson <karljohnson.it@gmail.com> 1.8-4
 - Change restic snapshots retention
 
-* Tue Aug 25 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.8-3
+* Tue Aug 25 2020 Karl Johnson <karljohnson.it@gmail.com> 1.8-3
 - Add restic wrapper script
 
-* Tue May 12 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.7-3
+* Tue May 12 2020 Karl Johnson <karljohnson.it@gmail.com> 1.7-3
 - Add function to check website SSL validity
 
-* Mon May 11 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.6-3
+* Mon May 11 2020 Karl Johnson <karljohnson.it@gmail.com> 1.6-3
 - Add spectre-meltdown-checker script
 - Fetch mysqltuner from GitHub
 
-* Wed Apr 22 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.5-2
+* Wed Apr 22 2020 Karl Johnson <karljohnson.it@gmail.com> 1.5-2
 - Add custom bash profile with aliases and functions
 
-* Fri Jan 10 2020 Karl Johnson <karljohnson.it@gmail.com> - 1.4-2
+* Fri Jan 10 2020 Karl Johnson <karljohnson.it@gmail.com> 1.4-2
 - Add CentOS 8 support
 
-* Wed Nov 27 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.4-1
+* Wed Nov 27 2019 Karl Johnson <karljohnson.it@gmail.com> 1.4-1
 - Add new script to verify tar archive integrity
 - Switch license to MIT
 
-* Wed Nov 13 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.3-1
+* Wed Nov 13 2019 Karl Johnson <karljohnson.it@gmail.com> 1.3-1
 - Bump mysqltuner 1.7.19
 - Add ionice to backup-mysql script
 - Disable tables locking during the dump with backup-mysql script
 
-* Mon Feb 18 2019 Karl Johnson <karljohnson.it@gmail.com> - 1.2-1
+* Mon Feb 18 2019 Karl Johnson <karljohnson.it@gmail.com> 1.2-1
 - Fix apache-top view for recent cPanel/Apache
 - Bump mysqltuner 1.7.14
 
-* Wed Nov 7 2018 Karl Johnson <karljohnson.it@gmail.com> - 1.1-1
+* Wed Nov 7 2018 Karl Johnson <karljohnson.it@gmail.com> 1.1-1
 - Add optional number of rentention days in backup-mysql.sh 1.2
 - Bump mysqltuner 1.7.13
 
-* Thu Jan 25 2018 Karl Johnson <karljohnson.it@gmail.com> - 1.0-1
+* Thu Jan 25 2018 Karl Johnson <karljohnson.it@gmail.com> 1.0-1
 - Initial release with mysqltuner 1.7.5, apache-top.py 2006, backup-mysql.sh 1.1, cpwpcheck.sh 1.1
