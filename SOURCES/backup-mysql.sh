@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# backup-mysql.sh - Version 1.6.0
+# backup-mysql.sh - Version 1.7.0
 # Copyright (C) Karl Johnson - karljohnson.it@gmail.com
 #
 # SQL Backup and Optimize - All Databases
@@ -67,30 +67,30 @@ then
     chmod 700 "$BACKUP"
 fi
 
-if command -v mysql >/dev/null 2>&1; then
-    SQLBIN=$(command -v mysql)
-elif command -v mariadb >/dev/null 2>&1; then
+if command -v mariadb >/dev/null 2>&1; then
     SQLBIN=$(command -v mariadb)
+elif command -v mysql >/dev/null 2>&1; then
+    SQLBIN=$(command -v mysql)
 else
-    echo "ERROR: No mysql or mariadb client found in PATH." >&2
+    echo "ERROR: No mariadb or mysql client found in PATH." >&2
     exit 1
 fi
 
-if command -v mysqldump >/dev/null 2>&1; then
-    SQLDUMP=$(command -v mysqldump)
-elif command -v mariadb-dump >/dev/null 2>&1; then
+if command -v mariadb-dump >/dev/null 2>&1; then
     SQLDUMP=$(command -v mariadb-dump)
+elif command -v mysqldump >/dev/null 2>&1; then
+    SQLDUMP=$(command -v mysqldump)
 else
-    echo "ERROR: No mysqldump or mariadb-dump found in PATH." >&2
+    echo "ERROR: No mariadb-dump or mysqldump found in PATH." >&2
     exit 1
 fi
 
-if command -v mysqlcheck >/dev/null 2>&1; then
-    SQLCHECK_BIN=$(command -v mysqlcheck)
-elif command -v mariadb-check >/dev/null 2>&1; then
+if command -v mariadb-check >/dev/null 2>&1; then
     SQLCHECK_BIN=$(command -v mariadb-check)
+elif command -v mysqlcheck >/dev/null 2>&1; then
+    SQLCHECK_BIN=$(command -v mysqlcheck)
 else
-    echo "ERROR: No mysqlcheck or mariadb-check found in PATH." >&2
+    echo "ERROR: No mariadb-check or mysqlcheck found in PATH." >&2
     exit 1
 fi
 
@@ -103,10 +103,11 @@ echo -e "\nCompleted.\n"
 ### Start SQL Backup
 
 echo -e "\nStarting SQL Backup...\n"
-DBS="$("$SQLBIN" --defaults-extra-file=/root/.my.cnf -u "$MUSER" -h "$MHOST" -Bse 'SHOW DATABASES')"
+EXCLUDE_DBS="information_schema|performance_schema|mysql|sys"
+DBS="$("$SQLBIN" --defaults-extra-file=/root/.my.cnf -u "$MUSER" -h "$MHOST" -Bse 'SHOW DATABASES' | grep -vE "^($EXCLUDE_DBS)$")"
 for db in $DBS; do
 	FILE="$BACKUP/mysql-$db.$NOW.$(date +"%H-%M-%S").gz"
-	"$SQLDUMP" --defaults-extra-file=/root/.my.cnf -u "$MUSER" -h "$MHOST" --force --single-transaction "$db" | "$GZIP" -9 > "$FILE"
+	"$SQLDUMP" --defaults-extra-file=/root/.my.cnf -u "$MUSER" -h "$MHOST" --force --single-transaction --routines --triggers --events "$db" | "$GZIP" -9 > "$FILE"
 done
 echo -e "\nCompleted.\n"
 
@@ -124,7 +125,7 @@ echo -e "\nStarting SQL Analyze...\n"
 if [ "$ANALYZE" = "TRUE" ]; then
     for alldbs in $("$SQLBIN" --defaults-extra-file=/root/.my.cnf -e 'SHOW DATABASES' -s --skip-column-names | grep -vE '^(information_schema|performance_schema|mysql|sys)$'); do
         for alltbl in $("$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -sNe 'SHOW TABLES'); do
-            "$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -e "ANALYZE TABLE $alltbl;"
+            "$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -e "ANALYZE TABLE \`$alltbl\`;"
         done
     done
 fi

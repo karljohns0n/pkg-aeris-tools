@@ -47,22 +47,22 @@ get_sql_bin() {
 	
 	case $type in
 		"client")
-			if command -v mysql >/dev/null 2>&1; then
-				echo "mysql"
-			elif command -v mariadb >/dev/null 2>&1; then
+			if command -v mariadb >/dev/null 2>&1; then
 				echo "mariadb"
+			elif command -v mysql >/dev/null 2>&1; then
+				echo "mysql"
 			else
-				echo "Error: Neither mysql nor mariadb client found" >&2
+				echo "Error: Neither mariadb nor mysql client found" >&2
 				return 1
 			fi
 			;;
 		"check")
-			if command -v mysqlcheck >/dev/null 2>&1; then
+			if command -v mariadb-check >/dev/null 2>&1; then
+				echo "mariadb-check"
+			elif command -v mysqlcheck >/dev/null 2>&1; then
 				echo "mysqlcheck"
-			elif command -v mariadbcheck >/dev/null 2>&1; then
-				echo "mariadbcheck"
 			else
-				echo "Error: Neither mysqlcheck nor mariadbcheck found" >&2
+				echo "Error: Neither mariadb-check nor mysqlcheck found" >&2
 				return 1
 			fi
 			;;
