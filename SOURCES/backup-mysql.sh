@@ -96,7 +96,7 @@ fi
 
 ### Cleanup Directory
 
-echo -e "\nPruning SQL Backup...\n"
+echo -e "\nPruning SQL Backup (keeping $RDAY day(s))...\n"
 find "$BACKUP" -maxdepth 1 -type f -name "*.gz" -daystart -mtime +"$RDAY" -exec rm -f {} \;
 echo -e "\nCompleted.\n"
 
@@ -105,28 +105,33 @@ echo -e "\nCompleted.\n"
 echo -e "\nStarting SQL Backup...\n"
 EXCLUDE_DBS="information_schema|performance_schema|mysql|sys"
 DBS="$("$SQLBIN" --defaults-extra-file=/root/.my.cnf -u "$MUSER" -h "$MHOST" -Bse 'SHOW DATABASES' | grep -vE "^($EXCLUDE_DBS)$")"
+DB_COUNT=$(echo "$DBS" | wc -w)
+DB_CURRENT=0
 for db in $DBS; do
+	DB_CURRENT=$((DB_CURRENT + 1))
+	echo "[$DB_CURRENT/$DB_COUNT] Dumping $db..."
 	FILE="$BACKUP/mysql-$db.$NOW.$(date +"%H-%M-%S").gz"
-	"$SQLDUMP" --defaults-extra-file=/root/.my.cnf -u "$MUSER" -h "$MHOST" --force --single-transaction --routines --triggers --events "$db" | "$GZIP" -9 > "$FILE"
+	# Disable errexit and pipefail in subshell so --force works properly, use PIPESTATUS to check dump exit code
+	( set +e +o pipefail; "$SQLDUMP" --defaults-extra-file=/root/.my.cnf -u "$MUSER" -h "$MHOST" --force --single-transaction --routines --triggers --events "$db" | "$GZIP" -9 > "$FILE"; exit "${PIPESTATUS[0]}" ) || echo "Warning: Issues encountered while dumping $db (continuing with --force)"
 done
 echo -e "\nCompleted.\n"
 
 ### Check SQL databases if requested
 
-echo -e "\nStarting SQL Check...\n"
 if [ "$SQLCHECK" = "TRUE" ]; then
-    "$SQLCHECK_BIN" --defaults-extra-file=/root/.my.cnf -u "$MUSER" $OPTIMIZE --auto-repair --all-databases
+    echo -e "\nStarting SQL Check...\n"
+    "$SQLCHECK_BIN" --defaults-extra-file=/root/.my.cnf -u "$MUSER" ${OPTIMIZE:+"$OPTIMIZE"} --auto-repair --all-databases
+    echo -e "\nCompleted.\n"
 fi
-echo -e "\nCompleted.\n"
 
 ### Perform SQL Analyze if requested
 
-echo -e "\nStarting SQL Analyze...\n"
 if [ "$ANALYZE" = "TRUE" ]; then
-    for alldbs in $("$SQLBIN" --defaults-extra-file=/root/.my.cnf -e 'SHOW DATABASES' -s --skip-column-names | grep -vE '^(information_schema|performance_schema|mysql|sys)$'); do
+    echo -e "\nStarting SQL Analyze...\n"
+    for alldbs in $("$SQLBIN" --defaults-extra-file=/root/.my.cnf -e 'SHOW DATABASES' -s --skip-column-names | grep -vE "^($EXCLUDE_DBS)$"); do
         for alltbl in $("$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -sNe 'SHOW TABLES'); do
             "$SQLBIN" --defaults-extra-file=/root/.my.cnf "$alldbs" -e "ANALYZE TABLE \`$alltbl\`;"
         done
     done
+    echo -e "\nCompleted.\n"
 fi
-echo -e "\nCompleted.\n"

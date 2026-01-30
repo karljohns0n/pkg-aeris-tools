@@ -71,8 +71,9 @@ install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 
 %changelog
 * Fri Jan 30 2026 Karl Johnson <karljohnson.it@gmail.com> 1.23.0-1
-- Scripts: mariadb in priority of mysql
-- Bump mysqltuner.pl to 2.8.25
+- SQL: mariadb in priority of mysql
+- SQL: enhance backup process
+- Bump mysqltuner.pl to 2.8.28
 - Bump YABS to 2025-12-29
 - Bump spectre-meltdown-checker to 2026-01-29
 
