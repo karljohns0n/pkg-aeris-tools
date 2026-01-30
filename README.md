@@ -1,7 +1,7 @@
 # Aeris Tools
 
 [![ProjectStatus](https://img.shields.io/badge/status-active-brightgreen.svg)](#)
-[![Release](https://img.shields.io/badge/release-1.23--1-success.svg)](#)
+[![Release](https://img.shields.io/badge/release-1.23.0--1-success.svg)](#)
 
 ## Synopsis
 
