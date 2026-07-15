@@ -2,7 +2,7 @@
 %define aeris_dir /opt/aeris
 
 Name:			aeris-tools
-Version:		1.23.0
+Version:		1.24.0
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 License:		MIT
@@ -70,6 +70,11 @@ install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 
 
 %changelog
+* Tue Jul 14 2026 Karl Johnson <karljohnson.it@gmail.com> 1.24.0-1
+- Bump mysqltuner.pl to 2.9.0
+- Bump YABS to 2026-07-03
+- Bump spectre-meltdown-checker to 2026-06-06
+
 * Fri Jan 30 2026 Karl Johnson <karljohnson.it@gmail.com> 1.23.0-1
 - SQL: mariadb in priority of mysql
 - SQL: enhance backup process
