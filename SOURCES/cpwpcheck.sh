@@ -21,8 +21,10 @@ for vhost in $(grep DocumentRoot /usr/local/apache/conf/httpd.conf|grep "public_
 		wpdir=$(echo "$wpverfile" | sed "s/\/wp-includes\/version.php//")
 		echo -e "\n\nFound WP in : $wpdir" 3>&1 4>&2 >>$LOG 2>&1
 		echo -e "WP version is: $(grep '^\$wp_version' "$wpverfile" | cut -d "'" -f 2)" 3>&1 4>&2 >>$LOG 2>&1
-		chmod 600 "$wpdir/wp-config.php"
-		wpconfigfile=$(ls -al "$wpdir/wp-config.php" |awk '{print $1,$3,$4}')
+	done
+	# Find wp-config independently in case it's not in the same directory as wp-includes/
+	find $vhost -wholename "*wp-config.php" | while read wpconfigfile; do
+		chmod 600 "$wpconfigfile"
 		echo -e "Configured wp-config permissions to 600: $wpconfigfile" 3>&1 4>&2 >>$LOG 2>&1
 	done
 done
