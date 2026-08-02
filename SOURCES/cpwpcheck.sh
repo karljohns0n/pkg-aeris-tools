@@ -41,7 +41,7 @@ Checks:
   - wp-config.php location, ownership, permissions, and symlinks
   - WP_DEBUG enabled on production installations
   - missing or disabled DISALLOW_FILE_EDIT
-  - world-writable WordPress core, plugin, and theme files
+  - world-writable WordPress core, plugin, and theme files and directories
 
 The audit never changes WordPress files. The report shows critical/warning sites
 first and keeps healthy sites compact. One positional EMAIL is accepted for
@@ -192,9 +192,15 @@ collect_world_writable_code() {
 	: > "$output"
 	find -P "$root" -xdev -maxdepth 1 -type f -perm -0002 -print0 \
 		>> "$output" 2>/dev/null || status=1
+	for directory in "$root" "$root/wp-content"; do
+		[[ -d "$directory" ]] || continue
+		find -P "$directory" -xdev -maxdepth 0 -type d -perm -0002 -print0 \
+			>> "$output" 2>/dev/null || status=1
+	done
 	for directory in wp-admin wp-includes wp-content/plugins wp-content/themes; do
 		[[ -d "$root/$directory" ]] || continue
-		find -P "$root/$directory" -xdev -type f -perm -0002 -print0 \
+		find -P "$root/$directory" -xdev \( -type f -o -type d \) \
+			-perm -0002 -print0 \
 			>> "$output" 2>/dev/null || status=1
 	done
 	return "$status"
@@ -277,12 +283,16 @@ audit_installation() {
 	while IFS= read -r -d '' path; do
 		writable_count=$((writable_count + 1))
 		if ((shown < 5)); then
-			add_finding "world-writable code file: $(display_path "$path")"
+			if [[ -d "$path" ]]; then
+				add_finding "world-writable code directory: $(display_path "$path")"
+			else
+				add_finding "world-writable code file: $(display_path "$path")"
+			fi
 			shown=$((shown + 1))
 		fi
 	done < "$writable"
 	((writable_count <= shown)) ||
-		add_finding "$((writable_count - shown)) more world-writable file(s) omitted"
+		add_finding "$((writable_count - shown)) more world-writable code path(s) omitted"
 
 	if ((writable_count)); then status="CRITICAL"
 	elif ((FINDING_COUNT)) && [[ "$status" == "OK" ]]; then status="WARN"
@@ -342,7 +352,7 @@ render_report() {
 			"$status" "$((i + 1))" "${RESULT_VERSION[i]}" \
 			"${RESULT_ACCOUNT[i]}" "${RESULT_WP_ROOT[i]}"
 	done
-	printf '\n%s\nReview every CRITICAL/WARN entry. No site PHP was executed and no WordPress files were modified.\n%s\n' \
+	printf '\n%s\nReview every CRITICAL/WARN entry. No WordPress were modified.\n%s\n' \
 		"$rule" "$rule"
 }
 

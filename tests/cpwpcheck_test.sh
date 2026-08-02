@@ -277,7 +277,7 @@ EOF
 	assert_equals "missing" "$(read_wp_constant "$config" UNKNOWN_CONSTANT)"
 }
 
-test_world_writable_scan_is_limited_to_code_areas()
+test_world_writable_scan_includes_code_files_and_directories_only()
 {
 	local root="$TEST_TMP/world-writable"
 	local results="$TEST_TMP/world-writable-results"
@@ -285,20 +285,34 @@ test_world_writable_scan_is_limited_to_code_areas()
 	local path
 
 	make_wp_install "$root"
+	mkdir -p "$root/wp-content/plugins/writable-plugin-dir" \
+		"$root/wp-content/themes/writable-theme-dir"
 	touch "$root/wp-login.php" "$root/wp-admin/admin.php" \
 		"$root/wp-content/plugins/plugin.php" "$root/wp-content/themes/theme.php" \
 		"$root/wp-content/uploads/upload.php"
 	chmod 666 "$root/wp-login.php" "$root/wp-admin/admin.php" \
 		"$root/wp-content/plugins/plugin.php" "$root/wp-content/themes/theme.php" \
 		"$root/wp-content/uploads/upload.php"
+	chmod 777 "$root" "$root/wp-content" "$root/wp-admin" \
+		"$root/wp-content/plugins/writable-plugin-dir" \
+		"$root/wp-content/themes/writable-theme-dir" \
+		"$root/wp-content/uploads"
 
 	collect_world_writable_code "$root" "$results"
 	while IFS= read -r -d '' path; do
 		paths[${#paths[@]}]=$path
 	done < "$results"
 
-	assert_equals "4" "${#paths[@]}"
+	assert_equals "9" "${#paths[@]}"
+	assert_contains "$(printf '%s\n' "${paths[@]}")" "$root"
+	assert_contains "$(printf '%s\n' "${paths[@]}")" "$root/wp-content"
+	assert_contains "$(printf '%s\n' "${paths[@]}")" "$root/wp-admin"
+	assert_contains "$(printf '%s\n' "${paths[@]}")" \
+		"wp-content/plugins/writable-plugin-dir"
+	assert_contains "$(printf '%s\n' "${paths[@]}")" \
+		"wp-content/themes/writable-theme-dir"
 	assert_not_contains "$(printf '%s\n' "${paths[@]}")" "wp-content/uploads/upload.php"
+	assert_not_contains "$(printf '%s\n' "${paths[@]}")" "$root/wp-content/uploads"
 }
 
 test_read_only_audit_preserves_wordpress_tree()
@@ -455,7 +469,7 @@ main()
 	run_test test_config_lookup_follows_wordpress_order_without_recursive_search
 	run_test test_permission_policy_accepts_hardened_modes_only
 	run_test test_wordpress_constants_are_read_without_executing_php
-	run_test test_world_writable_scan_is_limited_to_code_areas
+	run_test test_world_writable_scan_includes_code_files_and_directories_only
 	run_test test_read_only_audit_preserves_wordpress_tree
 	run_test test_large_report_puts_attention_first_and_shows_all_healthy_rows
 	run_test test_mail_failure_is_returned_to_the_caller
