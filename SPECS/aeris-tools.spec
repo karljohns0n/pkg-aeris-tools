@@ -2,7 +2,7 @@
 %define aeris_dir /opt/aeris
 
 Name:			aeris-tools
-Version:		1.24.0
+Version:		1.25.0
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 License:		MIT
@@ -70,6 +70,11 @@ install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 
 
 %changelog
+* Sun Aug 2 2026 Karl Johnson <karljohnson.it@gmail.com> 1.25.0-1
+- Bump cpwpcheck to 2.0.0
+- Bump mysqltuner.pl to 2.9.1
+- Bump YABS to 2026-07-24
+
 * Tue Jul 14 2026 Karl Johnson <karljohnson.it@gmail.com> 1.24.0-1
 - Bump mysqltuner.pl to 2.9.0
 - Bump YABS to 2026-07-03
