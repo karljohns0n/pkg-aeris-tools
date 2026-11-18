@@ -2,19 +2,19 @@
 %define aeris_dir /opt/aeris
 
 Name:			aeris-tools
-Version:		1.26.0
+Version:		1.27.0
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 License:		MIT
 URL:			https://repo.aerisnetwork.com
 
-Source0:		https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl
+Source0:		https://github.com/major/MySQLTuner-perl/releases/download/v2.9.4/mysqltuner.pl
 Source1:		backup-mysql.sh
 Source2:		cpwpcheck.sh
 Source3:		archivecheck.sh
-Source4:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
+Source4:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/ee78a7793ab0f4d8035b8838a9976f0d9bfd2d95/spectre-meltdown-checker.sh
 Source5:		backup-restic.sh
-Source6:		https://raw.githubusercontent.com/masonr/yet-another-bench-script/master/yabs.sh
+Source6:		https://raw.githubusercontent.com/masonr/yet-another-bench-script/21f62408ecde9b23d4eec878f46a8292f1944aa0/yabs.sh
 Source7:		https://github.com/gordalina/cachetool/releases/latest/download/cachetool.phar
 
 Source100:		aeris.sh
@@ -22,6 +22,9 @@ Source100:		aeris.sh
 Source200:		apache-top.py
 Source201:		apache-top2.py
 
+Patch0:		mysqltuner-perl-5.16.patch
+
+BuildRequires:	patch
 BuildRequires:	setup
 Requires:		mutt
 
@@ -42,18 +45,21 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 %prep
 %setup -q -c -T
+cp -p %{SOURCE0} mysqltuner.pl
+%patch -P 0 -p1
 
 %install
 
 install -d -m 0755 %{buildroot}%{aeris_dir}
 install -d -m 0755 %{buildroot}%{aeris_dir}/tools
+install -p -m 0700 mysqltuner.pl %{buildroot}%{aeris_dir}/tools
 
 %if 0%{?rhel} <= 8
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}%{aeris_dir}/tools
+install -p -m 0700 %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}%{aeris_dir}/tools
 %endif
 
 %if 0%{?rhel} >= 9
-install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}%{aeris_dir}/tools
+install -p -m 0700 %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}%{aeris_dir}/tools
 %endif
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
@@ -70,6 +76,12 @@ install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 
 
 %changelog
+* Wed Nov 18 2026 Karl Johnson <karljohnson.it@gmail.com> 1.27.0-1
+- Bump mysqltuner.pl to 2.9.4
+- Patch MySQLTuner for EL7 Perl 5.16 compatibility
+- Bump YABS to 2026-10-31
+- Bump spectre-meltdown-checker to 26.36.1111406
+
 * Tue Oct 20 2026 Karl Johnson <karljohnson.it@gmail.com> 1.26.0-1
 - Bump mysqltuner.pl to 2.9.2
 
