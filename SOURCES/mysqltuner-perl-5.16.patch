@@ -1,8 +1,0 @@
---- a/mysqltuner.pl
-+++ b/mysqltuner.pl
-@@ -18865 +18865,4 @@
--@REPORT_SECTIONS = map { no strict 'refs'; \&$_ } @REPORT_SECTION_NAMES;
-+{
-+    no strict 'refs';
-+    @REPORT_SECTIONS = map { \&$_ } @REPORT_SECTION_NAMES;
-+}

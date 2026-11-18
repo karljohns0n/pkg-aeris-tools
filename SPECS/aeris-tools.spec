@@ -22,9 +22,6 @@ Source100:		aeris.sh
 Source200:		apache-top.py
 Source201:		apache-top2.py
 
-Patch0:		mysqltuner-perl-5.16.patch
-
-BuildRequires:	patch
 BuildRequires:	setup
 Requires:		mutt
 
@@ -38,6 +35,7 @@ Requires:		mailx
 
 %if 0%{?rhel} >= 9
 Requires:		s-nail perl-diagnostics
+Requires:		perl(Sys::Hostname)
 %endif
 
 %description
@@ -45,21 +43,18 @@ This package includes a set of tools and scripts for Web hosting servers from di
 
 %prep
 %setup -q -c -T
-cp -p %{SOURCE0} mysqltuner.pl
-%patch -P 0 -p1
 
 %install
 
 install -d -m 0755 %{buildroot}%{aeris_dir}
 install -d -m 0755 %{buildroot}%{aeris_dir}/tools
-install -p -m 0700 mysqltuner.pl %{buildroot}%{aeris_dir}/tools
 
 %if 0%{?rhel} <= 8
-install -p -m 0700 %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}%{aeris_dir}/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE200} %{SOURCE201} %{buildroot}%{aeris_dir}/tools
 %endif
 
 %if 0%{?rhel} >= 9
-install -p -m 0700 %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}%{aeris_dir}/tools
+install -p -m 0700 %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{buildroot}%{aeris_dir}/tools
 %endif
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/profile.d
@@ -78,7 +73,7 @@ install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 %changelog
 * Wed Nov 18 2026 Karl Johnson <karljohnson.it@gmail.com> 1.27.0-1
 - Bump mysqltuner.pl to 2.9.4
-- Patch MySQLTuner for EL7 Perl 5.16 compatibility
+- MySQLTuner 2.9.4 does not support EL7 Perl 5.16
 - Bump YABS to 2026-10-31
 - Bump spectre-meltdown-checker to 26.36.1111406
 
