@@ -2,19 +2,19 @@
 %define aeris_dir /opt/aeris
 
 Name:			aeris-tools
-Version:		1.26.0
+Version:		1.27.0
 Release:		1%{?dist}
 Summary:		A set of tools and scripts for Web hosting servers
 License:		MIT
 URL:			https://repo.aerisnetwork.com
 
-Source0:		https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl
+Source0:		https://github.com/major/MySQLTuner-perl/releases/download/v2.9.4/mysqltuner.pl
 Source1:		backup-mysql.sh
 Source2:		cpwpcheck.sh
 Source3:		archivecheck.sh
-Source4:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/master/spectre-meltdown-checker.sh
+Source4:		https://raw.githubusercontent.com/speed47/spectre-meltdown-checker/ee78a7793ab0f4d8035b8838a9976f0d9bfd2d95/spectre-meltdown-checker.sh
 Source5:		backup-restic.sh
-Source6:		https://raw.githubusercontent.com/masonr/yet-another-bench-script/master/yabs.sh
+Source6:		https://raw.githubusercontent.com/masonr/yet-another-bench-script/21f62408ecde9b23d4eec878f46a8292f1944aa0/yabs.sh
 Source7:		https://github.com/gordalina/cachetool/releases/latest/download/cachetool.phar
 
 Source100:		aeris.sh
@@ -35,6 +35,7 @@ Requires:		mailx
 
 %if 0%{?rhel} >= 9
 Requires:		s-nail perl-diagnostics
+Requires:		perl(Sys::Hostname)
 %endif
 
 %description
@@ -70,6 +71,12 @@ install -p -m 0644 %{SOURCE100} %{buildroot}%{_sysconfdir}/profile.d/z-aeris.sh
 
 
 %changelog
+* Wed Nov 18 2026 Karl Johnson <karljohnson.it@gmail.com> 1.27.0-1
+- Bump mysqltuner.pl to 2.9.4
+- MySQLTuner 2.9.4 does not support EL7 Perl 5.16
+- Bump YABS to 2026-10-31
+- Bump spectre-meltdown-checker to 26.36.1111406
+
 * Tue Oct 20 2026 Karl Johnson <karljohnson.it@gmail.com> 1.26.0-1
 - Bump mysqltuner.pl to 2.9.2
 
