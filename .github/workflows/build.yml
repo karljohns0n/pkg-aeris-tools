@@ -128,6 +128,10 @@ jobs:
 
               ls -alh /opt/aeris/tools/
               ls -alh /etc/profile.d/z-aeris.sh
+              # MySQLTuner 2.9.4 does not run on EL7 Perl 5.16.
+              if [[ "${{ matrix.VERSION }}" -ge 8 ]]; then
+                /opt/aeris/tools/mysqltuner.pl --help
+              fi
             '
 
       - name: Upload RPMs
